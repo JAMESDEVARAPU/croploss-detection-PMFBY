@@ -1,0 +1,156 @@
+import ee
+import json
+import sys
+import os
+from datetime import datetime, timedelta
+
+# Initialize Earth Engine
+service_account_key = os.environ.get('GEE_SERVICE_ACCOUNT_KEY')
+if service_account_key:
+    service_account = json.loads(service_account_key)
+    credentials = ee.ServiceAccountCredentials(service_account['client_email'], key_data=service_account_key)
+    ee.Initialize(credentials)
+else:
+    ee.Initialize()
+
+def analyze_crop_loss(latitude, longitude, crop_type, field_area):
+    """Analyze crop loss using Google Earth Engine"""
+    
+    try:
+        # Define area of interest
+        point = ee.Geometry.Point([longitude, latitude])
+        area = point.buffer(field_area * 50)  # Buffer based on field area
+        
+        # Date ranges for before/after comparison
+        end_date = datetime.now()
+        start_current = end_date - timedelta(days=30)
+        start_before = end_date - timedelta(days=120)
+        end_before = end_date - timedelta(days=60)
+        
+        # Get Sentinel-2 imagery
+        def mask_clouds(image):
+            qa = image.select('QA60')
+            cloud_bit_mask = 1 << 10
+            cirrus_bit_mask = 1 << 11
+            mask = qa.bitwiseAnd(cloud_bit_mask).eq(0).And(qa.bitwiseAnd(cirrus_bit_mask).eq(0))
+            return image.updateMask(mask).divide(10000)
+        
+        # Before period imagery
+        before_collection = ee.ImageCollection('COPERNICUS/S2_SR') \
+            .filterDate(start_before.strftime('%Y-%m-%d'), end_before.strftime('%Y-%m-%d')) \
+            .filterBounds(area) \
+            .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
+            .map(mask_clouds)
+        
+        # Current period imagery
+        current_collection = ee.ImageCollection('COPERNICUS/S2_SR') \
+            .filterDate(start_current.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')) \
+            .filterBounds(area) \
+            .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
+            .map(mask_clouds)
+        
+        if before_collection.size().getInfo() == 0 or current_collection.size().getInfo() == 0:
+            raise Exception("Insufficient satellite imagery available for analysis")
+        
+        # Calculate NDVI
+        def add_ndvi(image):
+            ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI')
+            return image.addBands(ndvi)
+        
+        before_ndvi = before_collection.map(add_ndvi).select('NDVI').median()
+        current_ndvi = current_collection.map(add_ndvi).select('NDVI').median()
+        
+        # Calculate statistics
+        before_stats = before_ndvi.reduceRegion(
+            reducer=ee.Reducer.mean(),
+            geometry=area,
+            scale=10,
+            maxPixels=1e9
+        )
+        
+        current_stats = current_ndvi.reduceRegion(
+            reducer=ee.Reducer.mean(),
+            geometry=area,
+            scale=10,
+            maxPixels=1e9
+        )
+        
+        ndvi_before = before_stats.get('NDVI').getInfo()
+        ndvi_current = current_stats.get('NDVI').getInfo()
+        
+        if ndvi_before is None or ndvi_current is None:
+            raise Exception("Unable to calculate NDVI values")
+        
+        # Calculate loss percentage
+        if ndvi_before > 0:
+            loss_percentage = max(0, ((ndvi_before - ndvi_current) / ndvi_before) * 100)
+        else:
+            loss_percentage = 0
+        
+        # Calculate confidence based on data quality
+        confidence = min(95, 70 + (before_collection.size().getInfo() * 5) + (current_collection.size().getInfo() * 5))
+        
+        # Determine damage cause based on NDVI patterns
+        damage_cause = "Unknown"
+        if loss_percentage > 40:
+            if ndvi_current < 0.2:
+                damage_cause = "Severe Drought"
+            elif ndvi_current < 0.3:
+                damage_cause = "Pest/Disease"
+            else:
+                damage_cause = "Weather Damage"
+        elif loss_percentage > 20:
+            damage_cause = "Moderate Stress"
+        
+        # Calculate affected area and estimated value
+        affected_area = field_area * (loss_percentage / 100)
+        
+        # Crop-specific value per hectare (INR)
+        crop_values = {
+            'rice': 40000,
+            'wheat': 35000,
+            'cotton': 60000,
+            'sugarcane': 80000,
+            'maize': 30000
+        }
+        
+        base_value = crop_values.get(crop_type, 40000)
+        estimated_value = affected_area * base_value
+        
+        # Generate satellite image URLs (simplified for demo)
+        before_image_url = f"https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/thumbnails/{before_collection.first().getThumbId()}"
+        current_image_url = f"https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/thumbnails/{current_collection.first().getThumbId()}"
+        
+        return {
+            'success': True,
+            'ndvi_before': float(ndvi_before),
+            'ndvi_current': float(ndvi_current),
+            'loss_percentage': float(loss_percentage),
+            'confidence': float(confidence),
+            'affected_area': float(affected_area),
+            'estimated_value': float(estimated_value),
+            'damage_cause': damage_cause,
+            'satellite_images': {
+                'before': before_image_url,
+                'current': current_image_url
+            }
+        }
+        
+    except Exception as e:
+        return {
+            'success': False,
+            'error': str(e)
+        }
+
+if __name__ == "__main__":
+    if len(sys.argv) != 5:
+        print(json.dumps({'success': False, 'error': 'Invalid arguments'}))
+        sys.exit(1)
+    
+    latitude = float(sys.argv[1])
+    longitude = float(sys.argv[2])
+    crop_type = sys.argv[3]
+    field_area = float(sys.argv[4])
+    
+    result = analyze_crop_loss(latitude, longitude, crop_type, field_area)
+    print(json.dumps(result))
