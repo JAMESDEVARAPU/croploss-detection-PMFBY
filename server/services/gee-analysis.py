@@ -12,16 +12,28 @@ from datetime import datetime, timedelta
 
 # Initialize Earth Engine if available
 if EE_AVAILABLE:
-    service_account_key = os.environ.get('GEE_SERVICE_ACCOUNT_KEY')
-    if service_account_key:
-        service_account = json.loads(service_account_key)
-        credentials = ee.ServiceAccountCredentials(service_account['client_email'], key_data=service_account_key)
-        ee.Initialize(credentials)
-    else:
-        try:
+    try:
+        # Use the service account credentials from the JSON file
+        credentials_path = '../../gee-credentials.json'
+        if os.path.exists(credentials_path):
+            service_account = 'gee-service-account@compact-marker-441912-a5.iam.gserviceaccount.com'
+            credentials = ee.ServiceAccountCredentials(service_account, credentials_path)
+            ee.Initialize(credentials)
+            print("Google Earth Engine initialized successfully with service account")
+        elif os.path.exists('gee-credentials.json'):
+            service_account = 'gee-service-account@compact-marker-441912-a5.iam.gserviceaccount.com'
+            credentials = ee.ServiceAccountCredentials(service_account, 'gee-credentials.json')
+            ee.Initialize(credentials)
+            print("Google Earth Engine initialized successfully with service account")
+        else:
+            # Fallback to default initialization
             ee.Initialize()
-        except Exception:
-            EE_AVAILABLE = False
+            print("Google Earth Engine initialized with default credentials")
+    except Exception as e:
+        EE_AVAILABLE = False
+        # Don't print errors to stdout as it interferes with JSON parsing
+        import sys
+        print(f"Earth Engine initialization failed: {e}", file=sys.stderr)
 
 def analyze_crop_loss_simulation(latitude, longitude, crop_type, field_area):
     """Simulate crop loss analysis with realistic satellite imagery timing"""
