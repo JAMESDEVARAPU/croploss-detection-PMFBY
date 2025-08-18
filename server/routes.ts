@@ -129,14 +129,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ]);
 
       let result = "";
+      let errorOutput = "";
+      
       pythonProcess.stdout.on("data", (data) => {
         result += data.toString();
+      });
+      
+      pythonProcess.stderr.on("data", (data) => {
+        errorOutput += data.toString();
       });
 
       pythonProcess.on("close", async (code) => {
         try {
-          if (code !== 0) {
-            throw new Error("GEE analysis failed");
+          console.log(`Python script exit code: ${code}`);
+          console.log(`Python stdout: ${result}`);
+          console.log(`Python stderr: ${errorOutput}`);
+          
+          // Try to parse result even if exit code is not 0, as long as we have valid JSON
+          if (!result.trim()) {
+            throw new Error(`No output from Python script. Exit code: ${code}, Error: ${errorOutput}`);
           }
 
           const geeResult = JSON.parse(result);

@@ -11,7 +11,7 @@ export interface IStorage {
   // Crop Analyses
   getCropAnalysis(id: string): Promise<CropAnalysis | undefined>;
   getCropAnalysesByUser(userId: string): Promise<CropAnalysis[]>;
-  createCropAnalysis(analysis: InsertCropAnalysis & { userId: string }): Promise<CropAnalysis>;
+  createCropAnalysis(analysis: Omit<InsertCropAnalysis, 'mobile'> & { userId: string }): Promise<CropAnalysis>;
   updateCropAnalysis(id: string, analysis: Partial<CropAnalysis>): Promise<CropAnalysis | undefined>;
 
   // PMFBY Rules
@@ -55,7 +55,11 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      language: insertUser.language || "en"
+    };
     this.users.set(id, user);
     return user;
   }
@@ -79,7 +83,7 @@ export class MemStorage implements IStorage {
       .sort((a, b) => new Date(b.analysisDate!).getTime() - new Date(a.analysisDate!).getTime());
   }
 
-  async createCropAnalysis(analysisData: InsertCropAnalysis & { userId: string }): Promise<CropAnalysis> {
+  async createCropAnalysis(analysisData: Omit<InsertCropAnalysis, 'mobile'> & { userId: string }): Promise<CropAnalysis> {
     const id = randomUUID();
     const analysis: CropAnalysis = {
       ...analysisData,

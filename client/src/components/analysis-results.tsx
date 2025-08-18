@@ -309,7 +309,7 @@ function SMSNotificationCard({ analysis }: { analysis: CropAnalysis }) {
             </div>
             
             <div className="text-xs text-gray-500 space-y-1">
-              <div>{t("sentTo")}: <span data-testid="text-mobile-number">{analysis.mobile || "N/A"}</span></div>
+              <div>{t("sentTo")}: <span data-testid="text-mobile-number">{"N/A"}</span></div>
               <div>{t("time")}: <span>{new Date(analysis.analysisDate!).toLocaleString()}</span></div>
             </div>
           </>

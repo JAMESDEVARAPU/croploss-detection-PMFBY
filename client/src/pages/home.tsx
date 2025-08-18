@@ -21,10 +21,10 @@ export default function Home() {
   const { t } = useLanguage();
   const [currentAnalysisId, setCurrentAnalysisId] = useState<string | null>(null);
 
-  const { data: currentAnalysis, isLoading } = useQuery({
+  const { data: currentAnalysis, isLoading } = useQuery<CropAnalysis>({
     queryKey: ["/api/crop-analysis", currentAnalysisId],
     enabled: !!currentAnalysisId,
-    refetchInterval: currentAnalysisId && (!currentAnalysis?.lossPercentage) ? 3000 : false,
+    refetchInterval: currentAnalysisId ? 3000 : false,
   });
 
   const handleAnalysisStart = (analysisId: string) => {

@@ -57,6 +57,8 @@ export const insertCropAnalysisSchema = createInsertSchema(cropAnalyses).omit({
   analysisDate: true,
   satelliteImages: true,
   smsStatus: true,
+}).extend({
+  mobile: z.string(),
 });
 
 export type User = typeof users.$inferSelect;

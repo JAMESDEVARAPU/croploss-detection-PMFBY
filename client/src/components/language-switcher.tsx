@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useLanguage, Language } from "../hooks/use-language";
+import { useLanguage, type Language } from "../hooks/use-language";
 import { ChevronDown } from "lucide-react";
 
 const languageOptions = [
