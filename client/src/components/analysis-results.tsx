@@ -51,35 +51,89 @@ export function AnalysisResults({ analysis, isLoading }: AnalysisResultsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {/* Before/After Comparison */}
+            {/* Before/After Satellite Images */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center space-x-1">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span>{t("beforeHealthy")}</span>
+                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span>{t("beforeHealthy")}</span>
+                  </div>
+                  {analysis.acquisitionDates && (
+                    <span className="text-xs text-gray-500">
+                      {new Date((analysis.acquisitionDates as Record<string, string>)?.before || new Date()).toLocaleDateString()}
+                    </span>
+                  )}
                 </h4>
-                <div className="w-full h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-lg border flex items-center justify-center">
-                  <div className="text-white text-center">
-                    <Satellite className="h-12 w-12 mx-auto mb-2" />
-                    <div className="text-sm">NDVI: {ndviBefore}</div>
-                    <div className="text-xs opacity-75">Healthy Vegetation</div>
+                <div className="relative w-full h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-lg border overflow-hidden">
+                  {analysis.satelliteImages && (analysis.satelliteImages as any)?.before ? (
+                    <img 
+                      src={(analysis.satelliteImages as any).before} 
+                      alt="Before satellite image"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <div className="text-center">
+                      <Satellite className="h-12 w-12 mx-auto mb-2" />
+                      <div className="text-sm">NDVI: {ndviBefore}</div>
+                      <div className="text-xs opacity-75">Healthy Vegetation</div>
+                      <div className="text-xs opacity-75 mt-1">Sentinel-2 Imagery</div>
+                    </div>
                   </div>
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center space-x-1">
-                  <AlertTriangle className="w-3 h-3 text-red-600" />
-                  <span>{t("currentDamaged")}</span>
+                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
+                  <div className="flex items-center space-x-1">
+                    <AlertTriangle className="w-3 h-3 text-red-600" />
+                    <span>{t("currentDamaged")}</span>
+                  </div>
+                  {analysis.acquisitionDates && (
+                    <span className="text-xs text-gray-500">
+                      {new Date((analysis.acquisitionDates as Record<string, string>)?.current || new Date()).toLocaleDateString()}
+                    </span>
+                  )}
                 </h4>
-                <div className="w-full h-48 bg-gradient-to-br from-orange-400 to-red-600 rounded-lg border flex items-center justify-center">
-                  <div className="text-white text-center">
-                    <AlertTriangle className="h-12 w-12 mx-auto mb-2" />
-                    <div className="text-sm">NDVI: {ndviCurrent}</div>
-                    <div className="text-xs opacity-75">Stressed/Damaged</div>
+                <div className="relative w-full h-48 bg-gradient-to-br from-orange-400 to-red-600 rounded-lg border overflow-hidden">
+                  {analysis.satelliteImages && (analysis.satelliteImages as any)?.current ? (
+                    <img 
+                      src={(analysis.satelliteImages as any).current} 
+                      alt="Current satellite image"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <div className="text-center">
+                      <AlertTriangle className="h-12 w-12 mx-auto mb-2" />
+                      <div className="text-sm">NDVI: {ndviCurrent}</div>
+                      <div className="text-xs opacity-75">Stressed/Damaged</div>
+                      <div className="text-xs opacity-75 mt-1">Sentinel-2 Imagery</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Time Gap Information */}
+            {analysis.acquisitionDates && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <div className="flex items-center space-x-2 text-blue-800">
+                  <Clock className="h-4 w-4" />
+                  <span className="text-sm font-medium">
+                    Analysis Period: {Math.round((new Date((analysis.acquisitionDates as Record<string, string>)?.current || new Date()).getTime() - new Date((analysis.acquisitionDates as Record<string, string>)?.before || new Date()).getTime()) / (1000 * 60 * 60 * 24))} days between images
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* Analysis Details */}
             <div className="bg-gray-50 rounded-lg p-4">

@@ -99,6 +99,7 @@ export class MemStorage implements IStorage {
       pmfbyEligible: null,
       compensationAmount: null,
       satelliteImages: null,
+      acquisitionDates: null,
       smsStatus: "pending",
     };
     this.cropAnalyses.set(id, analysis);

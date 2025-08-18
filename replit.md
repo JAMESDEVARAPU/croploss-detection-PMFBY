@@ -60,9 +60,12 @@ Preferred communication style: Simple, everyday language.
 - **Embla Carousel**: Image carousel for satellite imagery display
 
 ### Satellite Analysis
-- **Python Runtime**: Earth Engine Python API for satellite data processing
-- **NDVI Calculation**: Normalized Difference Vegetation Index for crop health assessment
+- **Python Runtime**: Earth Engine Python API for satellite data processing with fallback simulation
+- **NDVI Calculation**: Normalized Difference Vegetation Index for crop health assessment  
+- **Temporal Analysis**: 1-2 month gap between before/after satellite imagery for accurate change detection
 - **Cloud Filtering**: Sentinel-2 imagery with cloud masking for accurate analysis
+- **Image Acquisition**: Timestamps stored for before/after satellite images with visual display
+- **Simulation Mode**: Realistic demo mode when Google Earth Engine credentials unavailable
 
 ### SMS Service
 - **Template System**: Multi-language SMS templates with variable substitution

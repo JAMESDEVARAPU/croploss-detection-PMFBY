@@ -27,6 +27,7 @@ export const cropAnalyses = pgTable("crop_analyses", {
   compensationAmount: real("compensation_amount"),
   analysisDate: timestamp("analysis_date").defaultNow(),
   satelliteImages: json("satellite_images"),
+  acquisitionDates: json("acquisition_dates"),
   smsStatus: text("sms_status").default("pending"),
 });
 
@@ -56,6 +57,7 @@ export const insertCropAnalysisSchema = createInsertSchema(cropAnalyses).omit({
   compensationAmount: true,
   analysisDate: true,
   satelliteImages: true,
+  acquisitionDates: true,
   smsStatus: true,
 }).extend({
   mobile: z.string(),

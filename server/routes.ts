@@ -169,6 +169,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             estimatedValue: geeResult.estimated_value,
             damageCause: geeResult.damage_cause,
             satelliteImages: geeResult.satellite_images,
+            acquisitionDates: geeResult.acquisition_dates,
           });
 
           if (!updatedAnalysis) return;
