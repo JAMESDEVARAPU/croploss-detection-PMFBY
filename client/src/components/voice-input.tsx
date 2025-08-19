@@ -54,7 +54,7 @@ export function VoiceInput({ onVoiceCommand }: VoiceInputProps) {
       
       try {
         // Process the voice command
-        const response = await apiRequest('/api/voice-command', {
+        const response = await fetch('/api/voice-command', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
