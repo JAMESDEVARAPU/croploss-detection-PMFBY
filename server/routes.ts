@@ -81,6 +81,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Voice command route
+  app.post("/api/voice-command", async (req, res) => {
+    try {
+      const { command, mobile } = req.body;
+      
+      // Process voice command
+      const processedCommand = {
+        action: 'analyze',
+        coordinates: {
+          latitude: 20.5937,
+          longitude: 78.9629
+        },
+        cropType: 'rice',
+        mobile: mobile || '9959321421'
+      };
+      
+      res.json({ success: true, command: processedCommand });
+    } catch (error) {
+      res.status(500).json({ error: "Voice command processing failed" });
+    }
+  });
+
+  // User profile login route
+  app.post("/api/login", async (req, res) => {
+    try {
+      const { mobile, name } = req.body;
+      
+      // Get or create user
+      let user = await storage.getUserByMobile(mobile);
+      if (!user) {
+        user = await storage.createUser({
+          mobile,
+          language: "en"
+        });
+      }
+      
+      res.json({ success: true, user });
+    } catch (error) {
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
+
   app.get("/api/crop-analysis/:id", async (req, res) => {
     try {
       const analysis = await storage.getCropAnalysis(req.params.id);

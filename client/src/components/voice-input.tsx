@@ -54,13 +54,14 @@ export function VoiceInput({ onVoiceCommand }: VoiceInputProps) {
       
       try {
         // Process the voice command
-        const response = await apiRequest('/api/voice/analyze', {
+        const response = await apiRequest('/api/voice-command', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            transcription: randomTranscription,
+            command: randomTranscription,
+            mobile: '9959321421',
             language: language
           })
         });
@@ -68,8 +69,8 @@ export function VoiceInput({ onVoiceCommand }: VoiceInputProps) {
         const result = await response.json();
         
         setLastTranscription(randomTranscription);
-        if (result.success) {
-          onVoiceCommand(result.parsed);
+        if (result.success && result.command) {
+          onVoiceCommand(result.command);
         }
       } catch (error) {
         console.error('Voice processing error:', error);
