@@ -6,6 +6,7 @@ import { CoordinateInput } from "@/components/coordinate-input";
 import { AnalysisResults } from "@/components/analysis-results";
 import { VoiceInput } from "@/components/voice-input";
 import { XAIExplanation } from "@/components/xai-explanation";
+import { UserLogin } from "@/components/user-login";
 import { useLanguage } from "@/hooks/use-language";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -30,6 +31,7 @@ export default function Home() {
   const [currentAnalysisId, setCurrentAnalysisId] = useState<string | null>(null);
   const [xaiExplanation, setXaiExplanation] = useState<any>(null);
   const [isLoadingXAI, setIsLoadingXAI] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   const { data: currentAnalysis, isLoading } = useQuery<CropAnalysis>({
     queryKey: ["/api/crop-analysis", currentAnalysisId],
@@ -149,6 +151,9 @@ export default function Home() {
             </Badge>
           </div>
         </div>
+
+        {/* User Login */}
+        <UserLogin onLogin={setCurrentUser} />
 
         {/* Voice Input */}
         <VoiceInput onVoiceCommand={handleVoiceCommand} />
