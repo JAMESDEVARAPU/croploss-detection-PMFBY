@@ -28,7 +28,7 @@ export function UserLogin({ onLogin }: UserLoginProps) {
 
     setIsLoading(true);
     try {
-      const response = await apiRequest('/api/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobile, name })

@@ -69,7 +69,7 @@ export default function Home() {
   }) => {
     setIsLoadingXAI(true);
     try {
-      const response = await apiRequest('/api/xai-analysis', {
+      const response = await fetch('/api/xai-analysis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
