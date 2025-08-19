@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { User, Phone, LogIn, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
@@ -124,10 +125,11 @@ export function UserLogin({ onLogin }: UserLoginProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1">
+          <Label htmlFor="mobile" className="text-sm font-medium text-gray-700 block mb-1">
             {text.mobile}
-          </label>
+          </Label>
           <Input
+            id="mobile"
             type="tel"
             placeholder="9959321421"
             value={mobile}
@@ -138,10 +140,11 @@ export function UserLogin({ onLogin }: UserLoginProps) {
         </div>
         
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1">
+          <Label htmlFor="name" className="text-sm font-medium text-gray-700 block mb-1">
             {text.name}
-          </label>
+          </Label>
           <Input
+            id="name"
             type="text"
             placeholder="Enter your name"
             value={name}
