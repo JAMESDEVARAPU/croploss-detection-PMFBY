@@ -219,6 +219,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }
 
+  // XAI Explanation Routes
+  app.post("/api/xai-analysis", async (req, res) => {
+    try {
+      const { ndviBefore, ndviCurrent, latitude, longitude, daysSinceSowing, cropType, language } = req.body;
+      
+      if (!ndviBefore || !ndviCurrent || !latitude || !longitude) {
+        return res.status(400).json({ error: "Missing required fields for XAI analysis" });
+      }
+
+      const { offlineModelService } = await import("./services/offline-model");
+      const result = await offlineModelService.predictWithExplanation({
+        ndviBefore,
+        ndviCurrent,
+        latitude,
+        longitude,
+        daysSinceSowing,
+        cropType
+      });
+
+      if (!result.success) {
+        return res.status(500).json({ error: result.error });
+      }
+
+      // Generate farmer-friendly explanation
+      const friendlyExplanation = offlineModelService.generateFarmerFriendlyExplanation(
+        result,
+        language || 'en'
+      );
+
+      res.json({
+        ...result,
+        farmerFriendlyExplanation: friendlyExplanation
+      });
+
+    } catch (error) {
+      console.error('XAI Analysis error:', error);
+      res.status(500).json({ error: "Failed to generate XAI analysis" });
+    }
+  });
+
+  // Voice Analysis Routes
+  app.post("/api/voice/analyze", async (req, res) => {
+    try {
+      const { transcription, language } = req.body;
+      
+      if (!transcription) {
+        return res.status(400).json({ error: "Transcription is required" });
+      }
+
+      const { voiceService } = await import("./services/voice-service");
+      const parsedCommand = voiceService.parseVoiceCommand(transcription);
+
+      res.json({
+        success: true,
+        parsed: parsedCommand,
+        action: parsedCommand.action
+      });
+
+    } catch (error) {
+      console.error('Voice analysis error:', error);
+      res.status(500).json({ error: "Failed to process voice command" });
+    }
+  });
+
+  // Model Info Route
+  app.get("/api/model/info", async (req, res) => {
+    try {
+      const { offlineModelService } = await import("./services/offline-model");
+      const modelInfo = await offlineModelService.getModelInfo();
+      res.json(modelInfo);
+    } catch (error) {
+      console.error('Model info error:', error);
+      res.status(500).json({ error: "Failed to get model information" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
