@@ -1,8 +1,8 @@
-# Crop Loss Analysis Platform
+# KrishiRakshak: Hybrid XAI-Powered Claim Eligibility System
 
 ## Overview
 
-This is a full-stack web application for automated crop loss analysis using satellite imagery and machine learning. The platform integrates with the Pradhan Mantri Fasal Bima Yojana (PMFBY) insurance scheme to assess crop damage and determine farmer compensation eligibility. Users can input field coordinates and crop information to receive AI-powered crop loss assessments, PMFBY eligibility determinations, and automated SMS notifications in multiple languages.
+KrishiRakshak is a hybrid XAI-powered claim eligibility system that helps farmers understand crop loss decisions through explainable AI. The platform detects crop loss using NDVI satellite data and weather patterns, predicts damage extent using local ML models (offline capability), uses SHAP for transparent decision explanations in local languages, checks PMFBY guidelines locally, and supports voice input/output in Hindi and Telugu. The system provides clear, understandable explanations for claim approvals or rejections.
 
 ## User Preferences
 

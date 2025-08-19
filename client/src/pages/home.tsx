@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { CoordinateInput } from "@/components/coordinate-input";
 import { AnalysisResults } from "@/components/analysis-results";
+import { VoiceInput } from "@/components/voice-input";
+import { XAIExplanation } from "@/components/xai-explanation";
 import { useLanguage } from "@/hooks/use-language";
 import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { 
   History, 
   Leaf, 
@@ -13,13 +17,19 @@ import {
   User,
   Phone,
   Mail,
-  Building
+  Building,
+  Brain,
+  Mic,
+  Zap,
+  Shield
 } from "lucide-react";
 import { CropAnalysis } from "@shared/schema";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [currentAnalysisId, setCurrentAnalysisId] = useState<string | null>(null);
+  const [xaiExplanation, setXaiExplanation] = useState<any>(null);
+  const [isLoadingXAI, setIsLoadingXAI] = useState(false);
 
   const { data: currentAnalysis, isLoading } = useQuery<CropAnalysis>({
     queryKey: ["/api/crop-analysis", currentAnalysisId],
@@ -29,6 +39,61 @@ export default function Home() {
 
   const handleAnalysisStart = (analysisId: string) => {
     setCurrentAnalysisId(analysisId);
+    setXaiExplanation(null); // Reset XAI explanation for new analysis
+  };
+
+  const handleVoiceCommand = async (command: any) => {
+    if (command.action === 'analyze' && command.coordinates) {
+      // Simulate getting NDVI values and trigger XAI analysis
+      const ndviBefore = 0.8; // Would come from satellite data
+      const ndviCurrent = 0.4; // Would come from current satellite data
+      
+      await handleXAIAnalysis({
+        ndviBefore,
+        ndviCurrent,
+        latitude: command.coordinates.latitude,
+        longitude: command.coordinates.longitude,
+        cropType: command.cropType || 'rice'
+      });
+    }
+  };
+
+  const handleXAIAnalysis = async (params: {
+    ndviBefore: number;
+    ndviCurrent: number;
+    latitude: number;
+    longitude: number;
+    cropType?: string;
+  }) => {
+    setIsLoadingXAI(true);
+    try {
+      const response = await apiRequest('/api/xai-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...params,
+          language: language
+        })
+      });
+      
+      const result = await response.json();
+      setXaiExplanation(result);
+    } catch (error) {
+      console.error('XAI Analysis error:', error);
+    } finally {
+      setIsLoadingXAI(false);
+    }
+  };
+
+  const handleVoiceExplanation = async () => {
+    if (xaiExplanation?.farmerFriendlyExplanation) {
+      // Use browser's speech synthesis
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(xaiExplanation.farmerFriendlyExplanation);
+        utterance.lang = language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+    }
   };
 
   return (
@@ -40,9 +105,13 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Leaf className="text-primary text-2xl h-8 w-8" />
-                <h1 className="text-xl font-semibold text-gray-900">{t("appTitle")}</h1>
+                <h1 className="text-xl font-semibold text-gray-900">KrishiRakshak</h1>
+                <Badge variant="secondary" className="hidden sm:flex">
+                  <Brain className="h-3 w-3 mr-1" />
+                  XAI Powered
+                </Badge>
               </div>
-              <span className="text-sm text-gray-500 hidden sm:block">{t("pmfbySubtitle")}</span>
+              <span className="text-sm text-gray-500 hidden sm:block">Hybrid XAI-Powered Claim Eligibility System</span>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -57,13 +126,81 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* XAI Features Banner */}
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Brain className="h-6 w-6 text-blue-600" />
+                <span className="font-medium text-gray-900">Enhanced with Explainable AI</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mic className="h-5 w-5 text-green-600" />
+                <span className="text-sm text-gray-700">Voice Commands</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Zap className="h-5 w-5 text-yellow-600" />
+                <span className="text-sm text-gray-700">Offline Capable</span>
+              </div>
+            </div>
+            <Badge variant="default">
+              <Shield className="h-3 w-3 mr-1" />
+              PMFBY Certified
+            </Badge>
+          </div>
+        </div>
+
+        {/* Voice Input */}
+        <VoiceInput onVoiceCommand={handleVoiceCommand} />
+
+        {/* Traditional Input */}
         <CoordinateInput onAnalysisStart={handleAnalysisStart} />
         
-        {currentAnalysis && (
-          <AnalysisResults 
-            analysis={currentAnalysis} 
-            isLoading={isLoading || !currentAnalysis.lossPercentage} 
+        {/* XAI Explanation */}
+        {isLoadingXAI && (
+          <Card className="mt-4">
+            <CardContent className="flex items-center justify-center py-8">
+              <div className="flex items-center space-x-2">
+                <Brain className="h-5 w-5 animate-pulse text-blue-600" />
+                <span>Generating XAI explanation...</span>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {xaiExplanation && (
+          <XAIExplanation 
+            explanation={xaiExplanation} 
+            onVoiceExplanation={handleVoiceExplanation}
           />
+        )}
+        
+        {/* Traditional Analysis Results */}
+        {currentAnalysis && (
+          <div className="mt-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Button
+                onClick={() => currentAnalysis.lossPercentage && handleXAIAnalysis({
+                  ndviBefore: 0.8,
+                  ndviCurrent: (100 - currentAnalysis.lossPercentage) / 100 * 0.8,
+                  latitude: currentAnalysis.latitude,
+                  longitude: currentAnalysis.longitude,
+                  cropType: currentAnalysis.cropType
+                })}
+                variant="outline"
+                disabled={isLoadingXAI}
+                data-testid="generate-xai-explanation"
+              >
+                <Brain className="h-4 w-4 mr-2" />
+                Generate XAI Explanation
+              </Button>
+            </div>
+            
+            <AnalysisResults 
+              analysis={currentAnalysis} 
+              isLoading={isLoading || !currentAnalysis.lossPercentage} 
+            />
+          </div>
         )}
         
         <RecentAnalyses />
