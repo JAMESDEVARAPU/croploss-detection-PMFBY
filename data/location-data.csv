@@ -1,0 +1,31 @@
+latitude,longitude,district,state,cropType,accuracy
+17.3850,78.4867,Hyderabad,Telangana,rice,5
+28.6139,77.2090,Delhi,Delhi,wheat,8
+19.0760,72.8777,Mumbai,Maharashtra,cotton,12
+13.0827,80.2707,Chennai,Tamil Nadu,rice,6
+22.5726,88.3639,Kolkata,West Bengal,rice,10
+12.9716,77.5946,Bangalore,Karnataka,maize,15
+23.0225,72.5714,Ahmedabad,Gujarat,cotton,7
+26.9124,75.7873,Jaipur,Rajasthan,wheat,9
+21.1458,79.0882,Nagpur,Maharashtra,cotton,11
+15.2993,74.1240,Goa,Goa,rice,8
+18.5204,73.8567,Pune,Maharashtra,sugarcane,6
+25.5941,85.1376,Patna,Bihar,wheat,12
+30.7333,76.7794,Chandigarh,Punjab,wheat,4
+11.0168,76.9558,Coimbatore,Tamil Nadu,cotton,9
+23.2599,77.4126,Bhopal,Madhya Pradesh,wheat,7
+26.8467,80.9462,Lucknow,Uttar Pradesh,sugarcane,10
+17.6868,83.2185,Visakhapatnam,Andhra Pradesh,rice,8
+22.3072,73.1812,Vadodara,Gujarat,cotton,11
+28.4595,77.0266,Gurgaon,Haryana,wheat,6
+18.1124,79.0193,Warangal,Telangana,cotton,9
+20.2961,85.8245,Bhubaneswar,Odisha,rice,13
+15.3173,75.7139,Hubli,Karnataka,cotton,14
+24.5854,73.7125,Udaipur,Rajasthan,maize,8
+19.9975,73.7898,Nashik,Maharashtra,sugarcane,7
+27.1767,78.0081,Agra,Uttar Pradesh,wheat,10
+16.5062,80.6480,Vijayawada,Andhra Pradesh,rice,5
+22.7196,75.8577,Indore,Madhya Pradesh,cotton,12
+31.1048,77.1734,Shimla,Himachal Pradesh,maize,15
+34.0837,74.7973,Srinagar,Jammu and Kashmir,rice,20
+9.9312,76.2673,Kochi,Kerala,rice,11

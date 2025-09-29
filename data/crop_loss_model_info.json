@@ -1,0 +1,35 @@
+{
+  "feature_names": [
+    "Agriculture_Health_Index_mean",
+    "NDVI_after_mean",
+    "NDVI_before_mean",
+    "NDVI_change_mean",
+    "NDVI_percent_change_mean",
+    "precipitation_total_mm_mean",
+    "latitude",
+    "longitude",
+    "vegetation_health_encoded",
+    "season_encoded"
+  ],
+  "metrics": {
+    "train_rmse": 0.0,
+    "test_rmse": 0.0,
+    "train_r2": 1.0,
+    "test_r2": 1.0,
+    "feature_importance": {
+      "Agriculture_Health_Index_mean": 0.0,
+      "NDVI_after_mean": 0.0,
+      "NDVI_before_mean": 0.0,
+      "NDVI_change_mean": 0.0,
+      "NDVI_percent_change_mean": 0.0,
+      "precipitation_total_mm_mean": 0.0,
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "vegetation_health_encoded": 0.0,
+      "season_encoded": 0.0
+    }
+  },
+  "training_date": "2025-08-23T09:09:01.484968",
+  "model_version": "1.0.0",
+  "model_type": "RandomForestRegressor"
+}

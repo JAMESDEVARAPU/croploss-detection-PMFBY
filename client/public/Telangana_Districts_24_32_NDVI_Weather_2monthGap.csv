@@ -1,0 +1,365 @@
+district,mandal,month,year,NDVI_mean,rainfall_mm_per_day,temperature_C,batch_id
+Rajanna Sircilla,Boinpalli,10.0,2024,0.0000,1.1795,0.00,batch_24
+Rajanna Sircilla,Chendurthi,10.0,2024,0.0000,1.1681,0.00,batch_24
+Rajanna Sircilla,Gambhiraopet,10.0,2024,0.0000,2.0371,0.00,batch_24
+Rajanna Sircilla,Illanthakunta,10.0,2024,0.0000,1.6581,0.00,batch_24
+Rajanna Sircilla,Konaraopet,10.0,2024,0.0000,1.4669,0.00,batch_24
+Rajanna Sircilla,Mustabad,10.0,2024,0.0000,1.8906,0.00,batch_24
+Rajanna Sircilla,Rudrangi,10.0,2024,0.0000,1.1208,0.00,batch_24
+Rajanna Sircilla,Sircilla,10.0,2024,0.0000,1.5634,0.00,batch_24
+Rajanna Sircilla,Thangallapalli,10.0,2024,0.0000,1.6906,0.00,batch_24
+Rajanna Sircilla,Veernapalli,10.0,2024,0.0000,1.7156,0.00,batch_24
+Rajanna Sircilla,Vemulawada,10.0,2024,0.0000,1.2713,0.00,batch_24
+Rajanna Sircilla,Vemulawada Rural,10.0,2024,0.0000,1.2090,0.00,batch_24
+Rajanna Sircilla,Yellareddypet,10.0,2024,0.0000,1.8791,0.00,batch_24
+Rajanna Sircilla,Boinpalli,12.0,2024,0.1836,0.1242,0.00,batch_24
+Rajanna Sircilla,Chendurthi,12.0,2024,0.2683,0.1264,0.00,batch_24
+Rajanna Sircilla,Gambhiraopet,12.0,2024,0.2017,0.1597,0.00,batch_24
+Rajanna Sircilla,Illanthakunta,12.0,2024,0.2155,0.1356,0.00,batch_24
+Rajanna Sircilla,Konaraopet,12.0,2024,0.2256,0.1019,0.00,batch_24
+Rajanna Sircilla,Mustabad,12.0,2024,0.1920,0.1640,0.00,batch_24
+Rajanna Sircilla,Rudrangi,12.0,2024,0.2707,0.1199,0.00,batch_24
+Rajanna Sircilla,Sircilla,12.0,2024,0.2002,0.0949,0.00,batch_24
+Rajanna Sircilla,Thangallapalli,12.0,2024,0.1730,0.1082,0.00,batch_24
+Rajanna Sircilla,Veernapalli,12.0,2024,0.2717,0.0167,0.00,batch_24
+Rajanna Sircilla,Vemulawada,12.0,2024,0.2522,0.1578,0.00,batch_24
+Rajanna Sircilla,Vemulawada Rural,12.0,2024,0.2033,0.1587,0.00,batch_24
+Rajanna Sircilla,Yellareddypet,12.0,2024,0.2300,0.0820,0.00,batch_24
+Rangareddy,Abdullapurmet,10.0,2024,0.2907,2.0636,0.00,batch_24
+Rangareddy,Amangal,10.0,2024,0.3825,2.6130,0.00,batch_24
+Rangareddy,Balapur,10.0,2024,0.2139,1.9110,0.00,batch_24
+Rangareddy,Chevella,10.0,2024,0.3835,2.0608,0.00,batch_24
+Rangareddy,Chowdergudem,10.0,2024,0.4345,1.7086,0.00,batch_24
+Rangareddy,Farooqnagar,10.0,2024,0.3794,1.9644,0.00,batch_24
+Rangareddy,Gandipet,10.0,2024,0.2012,2.0256,0.00,batch_24
+Rangareddy,Hayathnagar,10.0,2024,0.2031,2.0262,0.00,batch_24
+Rangareddy,Ibrahimpatnam,10.0,2024,0.2264,2.0862,0.00,batch_24
+Rangareddy,Kadthal,10.0,2024,0.3807,2.5999,0.00,batch_24
+Rangareddy,Kandukur,10.0,2024,0.1979,2.2807,0.00,batch_24
+Rangareddy,Keshampeta,10.0,2024,0.3960,2.3040,0.00,batch_24
+Rangareddy,Kondurg,10.0,2024,0.4408,1.7854,0.00,batch_24
+Rangareddy,Kothur,10.0,2024,0.3616,1.9159,0.00,batch_24
+Rangareddy,Madgul,10.0,2024,0.4251,2.7912,0.00,batch_24
+Rangareddy,Maheswaram,10.0,2024,0.2389,2.0432,0.00,batch_24
+Rangareddy,Manchal,10.0,2024,0.3853,2.4541,0.00,batch_24
+Rangareddy,Moinabad,10.0,2024,0.3046,2.1181,0.00,batch_24
+Rangareddy,Nandigama,10.0,2024,0.3482,1.8322,0.00,batch_24
+Rangareddy,Rajendranagar,10.0,2024,0.2329,1.8861,0.00,batch_24
+Rangareddy,Serilingampalle,10.0,2024,0.1777,2.0076,0.00,batch_24
+Rangareddy,Shabad,10.0,2024,0.4358,1.7922,0.00,batch_24
+Rangareddy,Shamshabad,10.0,2024,0.3019,1.9723,0.00,batch_24
+Rangareddy,Shankarpalle,10.0,2024,0.3718,2.0734,0.00,batch_24
+Rangareddy,Talakondapally,10.0,2024,0.3826,2.5041,0.00,batch_24
+Rangareddy,Yacharam,10.0,2024,0.3073,2.5832,0.00,batch_24
+Rangareddy,Saroornagar,10.0,2024,0.1639,2.0098,0.00,batch_24
+Rangareddy,Abdullapurmet,12.0,2024,0.2174,0.1882,0.00,batch_24
+Rangareddy,Amangal,12.0,2024,0.2584,0.1574,0.00,batch_24
+Rangareddy,Balapur,12.0,2024,0.2066,0.2018,0.00,batch_24
+Rangareddy,Chevella,12.0,2024,0.2416,0.2180,0.00,batch_24
+Rangareddy,Chowdergudem,12.0,2024,0.2345,0.2005,0.00,batch_24
+Rangareddy,Farooqnagar,12.0,2024,0.2302,0.2001,0.00,batch_24
+Rangareddy,Gandipet,12.0,2024,0.1422,0.2274,0.00,batch_24
+Rangareddy,Hayathnagar,12.0,2024,0.1604,0.1756,0.00,batch_24
+Rangareddy,Ibrahimpatnam,12.0,2024,0.2234,0.2227,0.00,batch_24
+Rangareddy,Kadthal,12.0,2024,0.2448,0.1881,0.00,batch_24
+Rangareddy,Kandukur,12.0,2024,0.2130,0.2165,0.00,batch_24
+Rangareddy,Keshampeta,12.0,2024,0.2460,0.1857,0.00,batch_24
+Rangareddy,Kondurg,12.0,2024,0.2435,0.2179,0.00,batch_24
+Rangareddy,Kothur,12.0,2024,0.2396,0.2024,0.00,batch_24
+Rangareddy,Madgul,12.0,2024,0.2596,0.0924,0.00,batch_24
+Rangareddy,Maheswaram,12.0,2024,0.2262,0.2110,0.00,batch_24
+Rangareddy,Manchal,12.0,2024,0.2283,0.2305,0.00,batch_24
+Rangareddy,Moinabad,12.0,2024,0.2246,0.2234,0.00,batch_24
+Rangareddy,Nandigama,12.0,2024,0.2385,0.2033,0.00,batch_24
+Rangareddy,Rajendranagar,12.0,2024,0.1955,0.2109,0.00,batch_24
+Rangareddy,Serilingampalle,12.0,2024,0.1770,0.2216,0.00,batch_24
+Rangareddy,Shabad,12.0,2024,0.2576,0.2386,0.00,batch_24
+Rangareddy,Shamshabad,12.0,2024,0.2526,0.2270,0.00,batch_24
+Rangareddy,Shankarpalle,12.0,2024,0.2356,0.2337,0.00,batch_24
+Rangareddy,Talakondapally,12.0,2024,0.2402,0.1678,0.00,batch_24
+Rangareddy,Yacharam,12.0,2024,0.2189,0.2135,0.00,batch_24
+Rangareddy,Saroornagar,12.0,2024,0.1371,0.0560,0.00,batch_24
+Sangareddy,Andole,10.0,2024,0.3775,2.2508,0.00,batch_24
+Sangareddy,Kohir,10.0,2024,0.3901,2.2197,0.00,batch_24
+Sangareddy,Gummadidala,10.0,2024,0.2546,1.7339,0.00,batch_24
+Sangareddy,Hathnoora,10.0,2024,0.3657,1.9773,0.00,batch_24
+Sangareddy,Jharasangam,10.0,2024,0.4147,2.2234,0.00,batch_24
+Sangareddy,Kalher,10.0,2024,0.4037,2.0608,0.00,batch_24
+Sangareddy,Kandi,10.0,2024,0.3780,1.9636,0.00,batch_24
+Sangareddy,Kondapur,10.0,2024,0.4086,2.1364,0.00,batch_24
+Sangareddy,Manoor,10.0,2024,0.3891,2.2767,0.00,batch_24
+Sangareddy,Mogudampally,10.0,2024,0.3943,2.2388,0.00,batch_24
+Sangareddy,Munipally,10.0,2024,0.3582,2.2399,0.00,batch_24
+Sangareddy,Nagalgidda,10.0,2024,0.3790,2.1576,0.00,batch_24
+Sangareddy,Narayankhed,10.0,2024,0.4361,2.1832,0.00,batch_24
+Sangareddy,Nyalkal,10.0,2024,0.3994,2.3762,0.00,batch_24
+Sangareddy,Patancheruvu,10.0,2024,0.3375,1.9382,0.00,batch_24
+Sangareddy,Pulkal,10.0,2024,0.3240,2.2010,0.00,batch_24
+Sangareddy,Raikode,10.0,2024,0.3498,2.3200,0.00,batch_24
+Sangareddy,Ramachandrapuram,10.0,2024,0.3159,1.9880,0.00,batch_24
+Sangareddy,Sadasivpet,10.0,2024,0.4112,2.1168,0.00,batch_24
+Sangareddy,Sangareddy,10.0,2024,0.3676,2.0526,0.00,batch_24
+Sangareddy,Sirgapoor,10.0,2024,0.4113,1.9107,0.00,batch_24
+Sangareddy,Vatpally,10.0,2024,0.3305,2.3366,0.00,batch_24
+Sangareddy,Zahirabad,10.0,2024,0.3741,2.2950,0.00,batch_24
+Sangareddy,Ameenpur,10.0,2024,0.2519,1.8072,0.00,batch_24
+Sangareddy,Jinnaram,10.0,2024,0.2927,1.8318,0.00,batch_24
+Sangareddy,Chowtakur,10.0,2024,0.3933,2.1343,0.00,batch_24
+Sangareddy,Nizampet,10.0,2024,0.3493,2.3518,0.00,batch_24
+Sangareddy,Kangti,10.0,2024,0.3819,1.8636,0.00,batch_24
+Sangareddy,Andole,12.0,2024,0.2137,0.1472,0.00,batch_24
+Sangareddy,Kohir,12.0,2024,0.2994,0.1928,0.00,batch_24
+Sangareddy,Gummadidala,12.0,2024,0.2583,0.1990,0.00,batch_24
+Sangareddy,Hathnoora,12.0,2024,0.2011,0.2057,0.00,batch_24
+Sangareddy,Jharasangam,12.0,2024,0.2843,0.1070,0.00,batch_24
+Sangareddy,Kalher,12.0,2024,0.1794,0.0016,0.00,batch_24
+Sangareddy,Kandi,12.0,2024,0.2214,0.2271,0.00,batch_24
+Sangareddy,Kondapur,12.0,2024,0.2216,0.2181,0.00,batch_24
+Sangareddy,Manoor,12.0,2024,0.2506,0.1583,0.00,batch_24
+Sangareddy,Mogudampally,12.0,2024,0.2892,0.1157,0.00,batch_24
+Sangareddy,Munipally,12.0,2024,0.2496,0.2108,0.00,batch_24
+Sangareddy,Nagalgidda,12.0,2024,0.2100,0.0484,0.00,batch_24
+Sangareddy,Narayankhed,12.0,2024,0.2381,0.0624,0.00,batch_24
+Sangareddy,Nyalkal,12.0,2024,0.2653,0.0250,0.00,batch_24
+Sangareddy,Patancheruvu,12.0,2024,0.2064,0.2267,0.00,batch_24
+Sangareddy,Pulkal,12.0,2024,0.1881,0.2110,0.00,batch_24
+Sangareddy,Raikode,12.0,2024,0.2291,0.1276,0.00,batch_24
+Sangareddy,Ramachandrapuram,12.0,2024,0.2130,0.2384,0.00,batch_24
+Sangareddy,Sadasivpet,12.0,2024,0.2723,0.2271,0.00,batch_24
+Sangareddy,Sangareddy,12.0,2024,0.2207,0.2260,0.00,batch_24
+Sangareddy,Sirgapoor,12.0,2024,0.2103,0.0000,0.00,batch_24
+Sangareddy,Vatpally,12.0,2024,0.2574,0.1165,0.00,batch_24
+Sangareddy,Zahirabad,12.0,2024,0.2744,0.0713,0.00,batch_24
+Sangareddy,Ameenpur,12.0,2024,0.1688,0.2161,0.00,batch_24
+Sangareddy,Jinnaram,12.0,2024,0.2020,0.2024,0.00,batch_24
+Sangareddy,Chowtakur,12.0,2024,0.2439,0.2162,0.00,batch_24
+Sangareddy,Nizampet,12.0,2024,0.1715,0.0222,0.00,batch_24
+Sangareddy,Kangti,12.0,2024,0.2095,0.0000,0.00,batch_24
+Siddipet,Akkannapet,10.0,2024,0.3607,1.6997,0.00,batch_24
+Siddipet,Bejjanki,10.0,2024,0.0037,1.7048,0.00,batch_24
+Siddipet,Cherial,10.0,2024,0.3405,1.5984,0.00,batch_24
+Siddipet,Chinnakodur,10.0,2024,0.0000,1.7632,0.00,batch_24
+Siddipet,Dubbak,10.0,2024,0.0000,1.9086,0.00,batch_24
+Siddipet,Gajwel,10.0,2024,0.3725,1.9802,0.00,batch_24
+Siddipet,Koheda,10.0,2024,0.1135,1.7293,0.00,batch_24
+Siddipet,Komuravelli,10.0,2024,0.2883,1.7525,0.00,batch_24
+Siddipet,Husnabad,10.0,2024,0.4094,1.8665,0.00,batch_24
+Siddipet,Jagdevpur,10.0,2024,0.3294,1.8094,0.00,batch_24
+Siddipet,Kondapak,10.0,2024,0.2528,1.7915,0.00,batch_24
+Siddipet,Maddur,10.0,2024,0.3400,1.5389,0.00,batch_24
+Siddipet,Markook,10.0,2024,0.3977,1.7941,0.00,batch_24
+Siddipet,Mirdoddi,10.0,2024,0.2039,2.0369,0.00,batch_24
+Siddipet,Mulug,10.0,2024,0.3502,1.7546,0.00,batch_24
+Siddipet,Nangnoor,10.0,2024,0.2026,1.6128,0.00,batch_24
+Siddipet,Raipole,10.0,2024,0.3789,2.0265,0.00,batch_24
+Siddipet,Siddipet_Rural,10.0,2024,0.0065,1.7519,0.00,batch_24
+Siddipet,Siddipet_Urban,10.0,2024,0.0518,1.7624,0.00,batch_24
+Siddipet,Thoguta,10.0,2024,0.2061,1.9601,0.00,batch_24
+Siddipet,Wargal,10.0,2024,0.3979,1.8954,0.00,batch_24
+Siddipet,Doultabad,10.0,2024,0.3834,2.1486,0.00,batch_24
+Siddipet,Narayanraopet,10.0,2024,0.0000,1.7628,0.00,batch_24
+Siddipet,Dhoolumitta,10.0,2024,0.3307,1.5459,0.00,batch_24
+Siddipet,Akbarpet-bhoompally,10.0,2024,0.0753,2.1068,0.00,batch_24
+Siddipet,Kukunoorpally,10.0,2024,0.2211,1.9082,0.00,batch_24
+Siddipet,Akkannapet,12.0,2024,0.2431,0.2630,0.00,batch_24
+Siddipet,Bejjanki,12.0,2024,0.2340,0.2073,0.00,batch_24
+Siddipet,Cherial,12.0,2024,0.2211,0.2788,0.00,batch_24
+Siddipet,Chinnakodur,12.0,2024,0.2168,0.2422,0.00,batch_24
+Siddipet,Dubbak,12.0,2024,0.2087,0.1919,0.00,batch_24
+Siddipet,Gajwel,12.0,2024,0.2348,0.2402,0.00,batch_24
+Siddipet,Koheda,12.0,2024,0.2412,0.2740,0.00,batch_24
+Siddipet,Komuravelli,12.0,2024,0.2049,0.2773,0.00,batch_24
+Siddipet,Husnabad,12.0,2024,0.2410,0.2431,0.00,batch_24
+Siddipet,Jagdevpur,12.0,2024,0.2633,0.2689,0.00,batch_24
+Siddipet,Kondapak,12.0,2024,0.2343,0.2734,0.00,batch_24
+Siddipet,Maddur,12.0,2024,0.2309,0.2707,0.00,batch_24
+Siddipet,Markook,12.0,2024,0.2392,0.2457,0.00,batch_24
+Siddipet,Mirdoddi,12.0,2024,0.2465,0.1965,0.00,batch_24
+Siddipet,Mulug,12.0,2024,0.2280,0.2073,0.00,batch_24
+Siddipet,Nangnoor,12.0,2024,0.2407,0.2888,0.00,batch_24
+Siddipet,Raipole,12.0,2024,0.2336,0.1887,0.00,batch_24
+Siddipet,Siddipet_Rural,12.0,2024,0.2324,0.2281,0.00,batch_24
+Siddipet,Siddipet_Urban,12.0,2024,0.2226,0.2610,0.00,batch_24
+Siddipet,Thoguta,12.0,2024,0.2050,0.2441,0.00,batch_24
+Siddipet,Wargal,12.0,2024,0.2564,0.1881,0.00,batch_24
+Siddipet,Doultabad,12.0,2024,0.2454,0.1737,0.00,batch_24
+Siddipet,Narayanraopet,12.0,2024,0.2079,0.1972,0.00,batch_24
+Siddipet,Dhoolumitta,12.0,2024,0.2450,0.2979,0.00,batch_24
+Siddipet,Akbarpet-bhoompally,12.0,2024,0.1941,0.1799,0.00,batch_24
+Siddipet,Kukunoorpally,12.0,2024,0.2162,0.2767,0.00,batch_24
+Suryapet,Ananthagiri,10.0,2024,0.4654,2.7624,0.00,batch_24
+Suryapet,Atmakur_S,10.0,2024,0.4329,2.2215,0.00,batch_24
+Suryapet,Chilkur,10.0,2024,0.4981,2.9618,0.00,batch_24
+Suryapet,Chinthala palem,10.0,2024,0.2529,3.6429,0.00,batch_24
+Suryapet,Chivvemla,10.0,2024,0.4392,2.2912,0.00,batch_24
+Suryapet,Garidepalli,10.0,2024,0.5108,3.0224,0.00,batch_24
+Suryapet,Kodad,10.0,2024,0.4527,3.0673,0.00,batch_24
+Suryapet,Huzur nagar,10.0,2024,0.4955,3.2422,0.00,batch_24
+Suryapet,Jajireddigudem,10.0,2024,0.4131,2.1801,0.00,batch_24
+Suryapet,Maddirala,10.0,2024,0.4145,2.2989,0.00,batch_24
+Suryapet,Mattampalli,10.0,2024,0.3807,3.6505,0.00,batch_24
+Suryapet,Mellachervu,10.0,2024,0.4231,3.2785,0.00,batch_24
+Suryapet,Mothey,10.0,2024,0.4124,2.2925,0.00,batch_24
+Suryapet,Munagala,10.0,2024,0.4699,2.3918,0.00,batch_24
+Suryapet,Nadigudem,10.0,2024,0.4850,2.4910,0.00,batch_24
+Suryapet,Nagaram,10.0,2024,0.4157,2.1054,0.00,batch_24
+Suryapet,Nereducherla,10.0,2024,0.5050,3.2960,0.00,batch_24
+Suryapet,Noothankal,10.0,2024,0.4480,2.3087,0.00,batch_24
+Suryapet,Palakeedu,10.0,2024,0.4468,3.8500,0.00,batch_24
+Suryapet,Penpahad,10.0,2024,0.4760,2.4933,0.00,batch_24
+Suryapet,Suryapet,10.0,2024,0.3996,2.3796,0.00,batch_24
+Suryapet,Thungathurthy,10.0,2024,0.4278,2.2822,0.00,batch_24
+Suryapet,Tirumalagiri,10.0,2024,0.3998,2.0362,0.00,batch_24
+Suryapet,Ananthagiri,12.0,2024,0.1666,0.2129,0.00,batch_24
+Suryapet,Atmakur_S,12.0,2024,0.2109,0.0840,0.00,batch_24
+Suryapet,Chilkur,12.0,2024,0.1505,0.2429,0.00,batch_24
+Suryapet,Chinthala palem,12.0,2024,0.2311,0.0703,0.00,batch_24
+Suryapet,Chivvemla,12.0,2024,0.1958,0.1921,0.00,batch_24
+Suryapet,Garidepalli,12.0,2024,0.1584,0.2849,0.00,batch_24
+Suryapet,Kodad,12.0,2024,0.1845,0.2029,0.00,batch_24
+Suryapet,Huzur nagar,12.0,2024,0.1494,0.2309,0.00,batch_24
+Suryapet,Jajireddigudem,12.0,2024,0.1730,0.0000,0.00,batch_24
+Suryapet,Maddirala,12.0,2024,0.2293,0.0463,0.00,batch_24
+Suryapet,Mattampalli,12.0,2024,0.1866,0.1048,0.00,batch_24
+Suryapet,Mellachervu,12.0,2024,0.2335,0.1281,0.00,batch_24
+Suryapet,Mothey,12.0,2024,0.2334,0.2367,0.00,batch_24
+Suryapet,Munagala,12.0,2024,0.1926,0.2317,0.00,batch_24
+Suryapet,Nadigudem,12.0,2024,0.1863,0.2690,0.00,batch_24
+Suryapet,Nagaram,12.0,2024,0.1932,0.0000,0.00,batch_24
+Suryapet,Nereducherla,12.0,2024,0.1589,0.3145,0.00,batch_24
+Suryapet,Noothankal,12.0,2024,0.2453,0.0533,0.00,batch_24
+Suryapet,Palakeedu,12.0,2024,0.1585,0.2341,0.00,batch_24
+Suryapet,Penpahad,12.0,2024,0.1781,0.2485,0.00,batch_24
+Suryapet,Suryapet,12.0,2024,0.1315,0.0771,0.00,batch_24
+Suryapet,Thungathurthy,12.0,2024,0.2056,0.0018,0.00,batch_24
+Suryapet,Tirumalagiri,12.0,2024,0.2135,0.0000,0.00,batch_24
+Vikarabad,Bantwaram,10.0,2024,0.4446,2.2749,0.00,batch_24
+Vikarabad,Basheerabad,10.0,2024,0.4140,1.9872,0.00,batch_24
+Vikarabad,Bommaraspeta,10.0,2024,0.3787,1.8851,0.00,batch_24
+Vikarabad,Dharoor,10.0,2024,0.4228,2.1893,0.00,batch_24
+Vikarabad,Doma,10.0,2024,0.4148,1.7148,0.00,batch_24
+Vikarabad,Doulthabad,10.0,2024,0.4174,2.0269,0.00,batch_24
+Vikarabad,Kodangal,10.0,2024,0.4430,1.8407,0.00,batch_24
+Vikarabad,Kotepally,10.0,2024,0.4420,2.3366,0.00,batch_24
+Vikarabad,Kulkacharla,10.0,2024,0.4213,1.6756,0.00,batch_24
+Vikarabad,Marpalle,10.0,2024,0.4299,2.2090,0.00,batch_24
+Vikarabad,Mominpet,10.0,2024,0.4120,2.1573,0.00,batch_24
+Vikarabad,Nawabpet,10.0,2024,0.4304,2.1374,0.00,batch_24
+Vikarabad,Pargi,10.0,2024,0.4304,1.7976,0.00,batch_24
+Vikarabad,Peddemul,10.0,2024,0.4186,2.2180,0.00,batch_24
+Vikarabad,Pudur,10.0,2024,0.4515,1.8742,0.00,batch_24
+Vikarabad,Tandur,10.0,2024,0.3871,2.0621,0.00,batch_24
+Vikarabad,Vikarabad,10.0,2024,0.4270,2.1059,0.00,batch_24
+Vikarabad,Yelal,10.0,2024,0.4205,1.9976,0.00,batch_24
+Vikarabad,Chowdapur,10.0,2024,0.4093,1.7688,0.00,batch_24
+Vikarabad,Dudyal,10.0,2024,0.4117,1.7197,0.00,batch_24
+Vikarabad,Bantwaram,12.0,2024,0.3092,0.1228,0.00,batch_24
+Vikarabad,Basheerabad,12.0,2024,0.3132,0.1358,0.00,batch_24
+Vikarabad,Bommaraspeta,12.0,2024,0.2790,0.0096,0.00,batch_24
+Vikarabad,Dharoor,12.0,2024,0.2933,0.1503,0.00,batch_24
+Vikarabad,Doma,12.0,2024,0.2555,0.1130,0.00,batch_24
+Vikarabad,Doulthabad,12.0,2024,0.2872,0.0480,0.00,batch_24
+Vikarabad,Kodangal,12.0,2024,0.2996,0.0862,0.00,batch_24
+Vikarabad,Kotepally,12.0,2024,0.3129,0.1857,0.00,batch_24
+Vikarabad,Kulkacharla,12.0,2024,0.2708,0.1843,0.00,batch_24
+Vikarabad,Marpalle,12.0,2024,0.2865,0.1865,0.00,batch_24
+Vikarabad,Mominpet,12.0,2024,0.2433,0.1994,0.00,batch_24
+Vikarabad,Nawabpet,12.0,2024,0.2765,0.2129,0.00,batch_24
+Vikarabad,Pargi,12.0,2024,0.2548,0.0967,0.00,batch_24
+Vikarabad,Peddemul,12.0,2024,0.2966,0.1378,0.00,batch_24
+Vikarabad,Pudur,12.0,2024,0.2851,0.2032,0.00,batch_24
+Vikarabad,Tandur,12.0,2024,0.2848,0.1483,0.00,batch_24
+Vikarabad,Vikarabad,12.0,2024,0.2645,0.1769,0.00,batch_24
+Vikarabad,Yelal,12.0,2024,0.2766,0.0930,0.00,batch_24
+Vikarabad,Chowdapur,12.0,2024,0.2707,0.2079,0.00,batch_24
+Vikarabad,Dudyal,12.0,2024,0.2757,0.1401,0.00,batch_24
+Wanaparthy,Amarchintha,10.0,2024,0.3806,3.6451,0.00,batch_24
+Wanaparthy,Atmakur,10.0,2024,0.4082,3.9478,0.00,batch_24
+Wanaparthy,Chinnambavi,10.0,2024,0.2248,4.6965,0.00,batch_24
+Wanaparthy,Ghanpur,10.0,2024,0.4068,2.8385,0.00,batch_24
+Wanaparthy,Gopalpet,10.0,2024,0.4495,3.8719,0.00,batch_24
+Wanaparthy,Kothakota,10.0,2024,0.3894,3.9073,0.00,batch_24
+Wanaparthy,Madanapur,10.0,2024,0.3955,3.7643,0.00,batch_24
+Wanaparthy,Pangal,10.0,2024,0.4426,4.4567,0.00,batch_24
+Wanaparthy,Pebbair,10.0,2024,0.3412,4.3644,0.00,batch_24
+Wanaparthy,Peddamandaddi,10.0,2024,0.3907,3.4528,0.00,batch_24
+Wanaparthy,Revally,10.0,2024,0.3819,4.2625,0.00,batch_24
+Wanaparthy,Srirangapur,10.0,2024,0.3909,4.4556,0.00,batch_24
+Wanaparthy,Wanaparthy,10.0,2024,0.3948,4.0928,0.00,batch_24
+Wanaparthy,Weepangandla,10.0,2024,0.4089,4.6439,0.00,batch_24
+Wanaparthy,Yedula,10.0,2024,0.3927,4.3880,0.00,batch_24
+Wanaparthy,Amarchintha,12.0,2024,0.2200,0.1392,0.00,batch_24
+Wanaparthy,Atmakur,12.0,2024,0.2074,0.1707,0.00,batch_24
+Wanaparthy,Chinnambavi,12.0,2024,0.1890,0.1293,0.00,batch_24
+Wanaparthy,Ghanpur,12.0,2024,0.1242,0.1252,0.00,batch_24
+Wanaparthy,Gopalpet,12.0,2024,0.1726,0.1560,0.00,batch_24
+Wanaparthy,Kothakota,12.0,2024,0.1546,0.1731,0.00,batch_24
+Wanaparthy,Madanapur,12.0,2024,0.1287,0.1045,0.00,batch_24
+Wanaparthy,Pangal,12.0,2024,0.2105,0.1239,0.00,batch_24
+Wanaparthy,Pebbair,12.0,2024,0.2107,0.1784,0.00,batch_24
+Wanaparthy,Peddamandaddi,12.0,2024,0.1396,0.1386,0.00,batch_24
+Wanaparthy,Revally,12.0,2024,0.2092,0.1402,0.00,batch_24
+Wanaparthy,Srirangapur,12.0,2024,0.1746,0.1695,0.00,batch_24
+Wanaparthy,Wanaparthy,12.0,2024,0.1896,0.1378,0.00,batch_24
+Wanaparthy,Weepangandla,12.0,2024,0.2121,0.1452,0.00,batch_24
+Wanaparthy,Yedula,12.0,2024,0.2303,0.1179,0.00,batch_24
+Warangal,Chennaraopet,10.0,2024,0.4162,2.0583,0.00,batch_24
+Warangal,Duggondi,10.0,2024,0.4008,1.7687,0.00,batch_24
+Warangal,Geesugonda,10.0,2024,0.4168,1.8757,0.00,batch_24
+Warangal,Khanapur,10.0,2024,0.4550,2.0277,0.00,batch_24
+Warangal,Khila Warangal,10.0,2024,0.3560,1.8615,0.00,batch_24
+Warangal,Nallabelli,10.0,2024,0.3715,1.5846,0.00,batch_24
+Warangal,Narsampet,10.0,2024,0.3847,1.9050,0.00,batch_24
+Warangal,Nekkonda,10.0,2024,0.4221,2.1641,0.00,batch_24
+Warangal,Parvathagiri,10.0,2024,0.4041,2.2666,0.00,batch_24
+Warangal,Raiparthy,10.0,2024,0.4042,2.2765,0.00,batch_24
+Warangal,Sangem,10.0,2024,0.3752,1.9044,0.00,batch_24
+Warangal,Warangal,10.0,2024,0.3451,1.8321,0.00,batch_24
+Warangal,Wardhannapet,10.0,2024,0.4036,2.0747,0.00,batch_24
+Warangal,Chennaraopet,12.0,2024,0.3011,0.1806,0.00,batch_24
+Warangal,Duggondi,12.0,2024,0.3181,0.2522,0.00,batch_24
+Warangal,Geesugonda,12.0,2024,0.2649,0.2481,0.00,batch_24
+Warangal,Khanapur,12.0,2024,0.2670,0.1822,0.00,batch_24
+Warangal,Khila Warangal,12.0,2024,0.2485,0.2437,0.00,batch_24
+Warangal,Nallabelli,12.0,2024,0.3067,0.2297,0.00,batch_24
+Warangal,Narsampet,12.0,2024,0.2752,0.1941,0.00,batch_24
+Warangal,Nekkonda,12.0,2024,0.2682,0.1419,0.00,batch_24
+Warangal,Parvathagiri,12.0,2024,0.2254,0.1611,0.00,batch_24
+Warangal,Raiparthy,12.0,2024,0.2006,0.0574,0.00,batch_24
+Warangal,Sangem,12.0,2024,0.2634,0.2069,0.00,batch_24
+Warangal,Warangal,12.0,2024,0.2288,0.2423,0.00,batch_24
+Warangal,Wardhannapet,12.0,2024,0.2260,0.1661,0.00,batch_24
+Yadadri Bhuvanagiri,Addagudur,10.0,2024,0.4152,1.9542,0.00,batch_24
+Yadadri Bhuvanagiri,Alair,10.0,2024,0.3714,1.8287,0.00,batch_24
+Yadadri Bhuvanagiri,Athmakur (M),10.0,2024,0.3343,1.9762,0.00,batch_24
+Yadadri Bhuvanagiri,B.Pochampally,10.0,2024,0.2752,2.1981,0.00,batch_24
+Yadadri Bhuvanagiri,Bhongiri,10.0,2024,0.3601,2.0314,0.00,batch_24
+Yadadri Bhuvanagiri,Bibinagar,10.0,2024,0.3423,2.2320,0.00,batch_24
+Yadadri Bhuvanagiri,Bommalaramaram,10.0,2024,0.3838,2.0743,0.00,batch_24
+Yadadri Bhuvanagiri,Choutuppal,10.0,2024,0.3611,1.9591,0.00,batch_24
+Yadadri Bhuvanagiri,Gundala,10.0,2024,0.3386,1.7690,0.00,batch_24
+Yadadri Bhuvanagiri,Motakondur,10.0,2024,0.3906,1.8865,0.00,batch_24
+Yadadri Bhuvanagiri,Mothkur,10.0,2024,0.3081,1.9948,0.00,batch_24
+Yadadri Bhuvanagiri,Narayanapoor,10.0,2024,0.3809,2.3440,0.00,batch_24
+Yadadri Bhuvanagiri,Rajapeta,10.0,2024,0.3715,1.7897,0.00,batch_24
+Yadadri Bhuvanagiri,Ramannapet,10.0,2024,0.3385,2.0818,0.00,batch_24
+Yadadri Bhuvanagiri,Turkapalle_M,10.0,2024,0.3821,1.9276,0.00,batch_24
+Yadadri Bhuvanagiri,Valigonda,10.0,2024,0.3377,1.9883,0.00,batch_24
+Yadadri Bhuvanagiri,Yadagirigutta,10.0,2024,0.3738,1.8901,0.00,batch_24
+Yadadri Bhuvanagiri,Addagudur,12.0,2024,0.2156,0.0000,0.00,batch_24
+Yadadri Bhuvanagiri,Alair,12.0,2024,0.2313,0.1921,0.00,batch_24
+Yadadri Bhuvanagiri,Athmakur (M),12.0,2024,0.2171,0.1206,0.00,batch_24
+Yadadri Bhuvanagiri,B.Pochampally,12.0,2024,0.1808,0.1764,0.00,batch_24
+Yadadri Bhuvanagiri,Bhongiri,12.0,2024,0.2258,0.1595,0.00,batch_24
+Yadadri Bhuvanagiri,Bibinagar,12.0,2024,0.2071,0.1504,0.00,batch_24
+Yadadri Bhuvanagiri,Bommalaramaram,12.0,2024,0.2280,0.1937,0.00,batch_24
+Yadadri Bhuvanagiri,Choutuppal,12.0,2024,0.2166,0.1838,0.00,batch_24
+Yadadri Bhuvanagiri,Gundala,12.0,2024,0.2228,0.1172,0.00,batch_24
+Yadadri Bhuvanagiri,Motakondur,12.0,2024,0.2483,0.1561,0.00,batch_24
+Yadadri Bhuvanagiri,Mothkur,12.0,2024,0.2180,0.0505,0.00,batch_24
+Yadadri Bhuvanagiri,Narayanapoor,12.0,2024,0.2318,0.1862,0.00,batch_24
+Yadadri Bhuvanagiri,Rajapeta,12.0,2024,0.2322,0.2274,0.00,batch_24
+Yadadri Bhuvanagiri,Ramannapet,12.0,2024,0.2033,0.0808,0.00,batch_24
+Yadadri Bhuvanagiri,Turkapalle_M,12.0,2024,0.2378,0.2134,0.00,batch_24
+Yadadri Bhuvanagiri,Valigonda,12.0,2024,0.2048,0.1035,0.00,batch_24
+Yadadri Bhuvanagiri,Yadagirigutta,12.0,2024,0.2253,0.1797,0.00,batch_24

@@ -1,0 +1,30 @@
+name: crop_loss_detection
+description: Offline Crop Loss Detection for PMFBY
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  geolocator: ^10.1.0
+  speech_to_text: ^6.6.0
+  flutter_tts: ^3.8.5
+  tflite_flutter: ^0.10.4
+  sqflite: ^2.3.0
+  shared_preferences: ^2.2.2
+  permission_handler: ^11.0.1
+  path_provider: ^2.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/models/
+    - assets/data/

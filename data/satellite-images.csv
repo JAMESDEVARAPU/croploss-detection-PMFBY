@@ -1,0 +1,8 @@
+latitude,longitude,district,state,beforeImage,afterImage
+# Raw satellite image URLs for before/after crop loss comparison
+# You can add your own satellite image URLs or base64 data here
+17.3850,78.4867,Hyderabad,Telangana,https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/16/25743/39285,https://mt1.google.com/vt/lyrs=s&x=25743&y=39285&z=16
+28.6139,77.2090,Delhi,Delhi,https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/16/25165/24593,https://mt1.google.com/vt/lyrs=s&x=25165&y=24593&z=16
+19.0760,72.8777,Mumbai,Maharashtra,https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/16/23877/30132,https://mt1.google.com/vt/lyrs=s&x=23877&y=30132&z=16
+13.0827,80.2707,Chennai,Tamil Nadu,https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/16/26309/33792,https://mt1.google.com/vt/lyrs=s&x=26309&y=33792&z=16
+22.5726,88.3639,Kolkata,West Bengal,https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/16/28952/27420,https://mt1.google.com/vt/lyrs=s&x=28952&y=27420&z=16
