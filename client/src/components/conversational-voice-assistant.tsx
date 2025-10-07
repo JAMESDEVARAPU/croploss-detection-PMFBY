@@ -102,7 +102,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     recognitionRef.current = recognition;
   }, [selectedLanguage]);
 
-  const speak = (text: string, lang?: string) => {
+  const speak = (text: string, lang?: string, callback?: () => void) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       
@@ -118,15 +118,24 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
       
       utterance.onend = () => {
         setIsSpeaking(false);
-        if (isActive && recognitionRef.current) {
+        if (callback) {
+          setTimeout(callback, 300);
+        } else if (isActive && recognitionRef.current) {
           setTimeout(() => {
-            recognitionRef.current.start();
+            try {
+              recognitionRef.current.start();
+            } catch (e) {
+              console.log('Recognition already started');
+            }
           }, 500);
         }
       };
       
       synthRef.current = utterance;
       window.speechSynthesis.speak(utterance);
+    } else if (callback) {
+      addToConversationLog('System', text);
+      setTimeout(callback, 500);
     }
   };
 
@@ -142,7 +151,15 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     setSelectedLanguage('en');
     
     const step = conversationFlow["select_language"];
-    speak(step.question, 'en-US');
+    speak(step.question, 'en-US', () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+        } catch (e) {
+          console.log('Recognition start error:', e);
+        }
+      }
+    });
   };
 
   const stopConversation = () => {
@@ -185,14 +202,12 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
           ? "बढ़िया! मैं हिंदी में जारी रखूंगा।"
           : "బాగుంది! నేను తెలుగులో కొనసాగిస్తాను.";
         
-        speak(confirmMessage);
-        
-        setTimeout(() => {
+        speak(confirmMessage, undefined, () => {
           if (step.nextStep) {
             setCurrentStep(step.nextStep);
             speak(conversationFlow[step.nextStep].question);
           }
-        }, 2000);
+        });
         break;
         
       case "get_name":
@@ -229,14 +244,12 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
                 ? `बढ़िया! मुझे आपका स्थान मिल गया ${latitude.toFixed(4)}, ${longitude.toFixed(4)}.`
                 : `బాగుంది! మీ లొకేషన్ ${latitude.toFixed(4)}, ${longitude.toFixed(4)} లభించింది.`;
               
-              speak(locationMessage);
-              
-              setTimeout(() => {
+              speak(locationMessage, undefined, () => {
                 if (step.nextStep) {
                   setCurrentStep(step.nextStep);
                   speak(conversationFlow[step.nextStep].question);
                 }
-              }, 2000);
+              });
             } catch (error) {
               const errorMessage = selectedLanguage === 'en' 
                 ? "I couldn't access your location. Please enable GPS."
@@ -268,15 +281,13 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
           
           if (step.nextStep) {
             setCurrentStep(step.nextStep);
-            speak(conversationFlow[step.nextStep].question);
-            
-            setTimeout(() => {
+            speak(conversationFlow[step.nextStep].question, undefined, () => {
               onAnalysisComplete({
                 ...conversationData,
                 fieldArea
               });
               stopConversation();
-            }, 2000);
+            });
           }
         } else {
           const retryMessage = selectedLanguage === 'en'
