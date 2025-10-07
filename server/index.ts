@@ -48,11 +48,9 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+  // Skip Vite middleware in development due to configuration issues
+  // Use static serving for both development and production
+  serveStatic(app);
 
   const port = parseInt(process.env.PORT || "5000", 10);
   server.listen(port, '0.0.0.0', () => {
