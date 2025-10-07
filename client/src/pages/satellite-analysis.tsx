@@ -7,6 +7,7 @@ import { AnalysisResults } from "@/components/analysis-results";
 import { OfflineIndicator } from "@/components/offline-indicator";
 import { XAIExplanationEnhanced } from "@/components/xai-explanation-enhanced";
 import { VoiceAssistant } from "@/components/voice-assistant";
+import { ConversationalVoiceAssistant } from "@/components/conversational-voice-assistant";
 import { useLanguage } from "@/hooks/use-language";
 import { Link } from "wouter";
 import {
@@ -42,6 +43,39 @@ export default function SatelliteAnalysis({ user, onLogout }: SatelliteAnalysisP
 
   const handleVoiceCommand = (command: string) => {
     console.log('Voice command received:', command);
+  };
+
+  const handleVoiceAnalysisComplete = async (data: {
+    userName: string;
+    latitude: number;
+    longitude: number;
+    fieldArea: number;
+  }) => {
+    const analysisData = {
+      latitude: data.latitude,
+      longitude: data.longitude,
+      fieldArea: data.fieldArea,
+      userName: data.userName,
+      cropType: 'rice',
+      startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      endDate: new Date().toISOString().split('T')[0]
+    };
+
+    try {
+      const response = await fetch('/api/satellite-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(analysisData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setCurrentAnalysisId(result.id);
+        setCurrentAnalysis(result);
+      }
+    } catch (error) {
+      console.error('Analysis failed:', error);
+    }
   };
 
   return (
@@ -138,6 +172,30 @@ export default function SatelliteAnalysis({ user, onLogout }: SatelliteAnalysisP
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
+          {/* Conversational Voice Assistant */}
+          <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-primary/20">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {language === 'en' ? '🎤 Voice-Guided Analysis' : 
+                     language === 'hi' ? '🎤 वॉयस-गाइडेड विश्लेषण' : 
+                     '🎤 వాయిస్-గైడెడ్ విశ్లేషణ'}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {language === 'en' ? 'Start a voice conversation to automatically analyze your field' : 
+                     language === 'hi' ? 'अपने खेत का स्वचालित विश्लेषण करने के लिए वॉयस बातचीत शुरू करें' : 
+                     'మీ పొలాన్ని స్వయంచాలకంగా విశ్లేషించడానికి వాయిస్ సంభాషణ ప్రారంభించండి'}
+                  </p>
+                </div>
+                <ConversationalVoiceAssistant 
+                  user={user}
+                  onAnalysisComplete={handleVoiceAnalysisComplete}
+                />
+              </div>
+            </CardContent>
+          </Card>
+          
           {/* Satellite Analysis Input */}
           <div id="coordinate-input">
             <EnhancedCoordinateInput onAnalysisStart={handleAnalysisStart} />

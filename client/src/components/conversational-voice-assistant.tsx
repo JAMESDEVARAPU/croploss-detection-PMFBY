@@ -1,0 +1,323 @@
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Mic, MicOff, MessageSquare, Volume2, VolumeX } from "lucide-react";
+import { useLanguage } from "@/hooks/use-language";
+import { useToast } from "@/hooks/use-toast";
+
+interface ConversationStep {
+  question: string;
+  action: string;
+  nextStep?: string;
+}
+
+interface ConversationalVoiceAssistantProps {
+  user: any;
+  onAnalysisComplete: (data: {
+    userName: string;
+    latitude: number;
+    longitude: number;
+    fieldArea: number;
+  }) => void;
+}
+
+export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: ConversationalVoiceAssistantProps) {
+  const { language } = useLanguage();
+  const { toast } = useToast();
+  const [isActive, setIsActive] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [currentStep, setCurrentStep] = useState<string>("start");
+  const [transcript, setTranscript] = useState("");
+  const [conversationData, setConversationData] = useState<any>({});
+  const [conversationLog, setConversationLog] = useState<Array<{ speaker: string; text: string }>>([]);
+  
+  const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  const conversationFlow: Record<string, ConversationStep> = {
+    start: {
+      question: language === 'en' ? "Hello! What is your name?" : 
+                language === 'hi' ? "नमस्ते! आपका नाम क्या है?" : 
+                "హలో! మీ పేరు ఏమిటి?",
+      action: "get_name",
+      nextStep: "ask_location"
+    },
+    ask_location: {
+      question: language === 'en' ? "Can I access your GPS location to analyze your field?" : 
+                language === 'hi' ? "क्या मैं आपके खेत का विश्लेषण करने के लिए GPS लोकेशन एक्सेस कर सकता हूं?" : 
+                "మీ పొలాన్ని విశ్లేషించడానికి GPS లొకేషన్ యాక్సెస్ చేయవచ్చా?",
+      action: "get_location_permission",
+      nextStep: "ask_field_area"
+    },
+    ask_field_area: {
+      question: language === 'en' ? "What is the area of your field in hectares?" : 
+                language === 'hi' ? "आपके खेत का क्षेत्रफल हेक्टेयर में क्या है?" : 
+                "మీ పొలం వైశాల్యం హెక్టార్లలో ఎంత?",
+      action: "get_field_area",
+      nextStep: "complete"
+    },
+    complete: {
+      question: language === 'en' ? "Thank you! Starting satellite analysis now..." : 
+                language === 'hi' ? "धन्यवाद! अब सैटेलाइट विश्लेषण शुरू कर रहे हैं..." : 
+                "ధన్యవాదాలు! ఇప్పుడు ఉపగ్రహ విశ్లేషణ ప్రారంభిస్తున్నాం...",
+      action: "start_analysis"
+    }
+  };
+
+  useEffect(() => {
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
+    
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : 'en-US';
+    
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+    
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+    
+    recognition.onresult = (event: any) => {
+      const result = event.results[0];
+      const transcript = result[0].transcript;
+      setTranscript(transcript);
+      
+      if (result.isFinal) {
+        handleUserResponse(transcript);
+      }
+    };
+    
+    recognitionRef.current = recognition;
+  }, [language]);
+
+  const speak = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : 'en-US';
+      utterance.rate = 0.9;
+      
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+        addToConversationLog('System', text);
+      };
+      
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        if (isActive && recognitionRef.current) {
+          setTimeout(() => {
+            recognitionRef.current.start();
+          }, 500);
+        }
+      };
+      
+      synthRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const addToConversationLog = (speaker: string, text: string) => {
+    setConversationLog(prev => [...prev, { speaker, text }]);
+  };
+
+  const startConversation = () => {
+    setIsActive(true);
+    setCurrentStep("start");
+    setConversationData({});
+    setConversationLog([]);
+    
+    const step = conversationFlow["start"];
+    speak(step.question);
+  };
+
+  const stopConversation = () => {
+    setIsActive(false);
+    setIsListening(false);
+    setIsSpeaking(false);
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
+  const handleUserResponse = async (response: string) => {
+    addToConversationLog('User', response);
+    
+    const step = conversationFlow[currentStep];
+    
+    switch (step.action) {
+      case "get_name":
+        setConversationData({ ...conversationData, userName: response });
+        if (step.nextStep) {
+          setCurrentStep(step.nextStep);
+          speak(conversationFlow[step.nextStep].question);
+        }
+        break;
+        
+      case "get_location_permission":
+        const affirmativeWords = ['yes', 'yeah', 'ok', 'okay', 'sure', 'हां', 'ठीक', 'అవును', 'సరే'];
+        const isAffirmative = affirmativeWords.some(word => 
+          response.toLowerCase().includes(word)
+        );
+        
+        if (isAffirmative) {
+          if (navigator.geolocation) {
+            try {
+              const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+              });
+              
+              const { latitude, longitude } = position.coords;
+              setConversationData({ 
+                ...conversationData, 
+                latitude, 
+                longitude 
+              });
+              
+              const locationMessage = language === 'en' 
+                ? `Great! I've got your location at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}.`
+                : language === 'hi'
+                ? `बढ़िया! मुझे आपका स्थान मिल गया ${latitude.toFixed(4)}, ${longitude.toFixed(4)}.`
+                : `బాగుంది! మీ లొకేషన్ ${latitude.toFixed(4)}, ${longitude.toFixed(4)} లభించింది.`;
+              
+              speak(locationMessage);
+              
+              setTimeout(() => {
+                if (step.nextStep) {
+                  setCurrentStep(step.nextStep);
+                  speak(conversationFlow[step.nextStep].question);
+                }
+              }, 2000);
+            } catch (error) {
+              const errorMessage = language === 'en' 
+                ? "I couldn't access your location. Please enable GPS."
+                : language === 'hi'
+                ? "मुझे आपका स्थान नहीं मिल पाया। कृपया GPS सक्षम करें।"
+                : "మీ లొకేషన్ యాక్సెస్ చేయలేకపోయాను. దయచేసి GPS ఎనేబుల్ చేయండి.";
+              
+              speak(errorMessage);
+              stopConversation();
+            }
+          }
+        } else {
+          const declineMessage = language === 'en'
+            ? "Okay, please manually enter your location then."
+            : language === 'hi'
+            ? "ठीक है, कृपया अपना स्थान मैन्युअल रूप से दर्ज करें।"
+            : "సరే, దయచేసి మీ లొకేషన్ మాన్యువల్‌గా నమోదు చేయండి.";
+          
+          speak(declineMessage);
+          stopConversation();
+        }
+        break;
+        
+      case "get_field_area":
+        const areaMatch = response.match(/(\d+\.?\d*)/);
+        if (areaMatch) {
+          const fieldArea = parseFloat(areaMatch[1]);
+          setConversationData({ ...conversationData, fieldArea });
+          
+          if (step.nextStep) {
+            setCurrentStep(step.nextStep);
+            speak(conversationFlow[step.nextStep].question);
+            
+            setTimeout(() => {
+              onAnalysisComplete({
+                ...conversationData,
+                fieldArea
+              });
+              stopConversation();
+            }, 2000);
+          }
+        } else {
+          const retryMessage = language === 'en'
+            ? "Sorry, I didn't catch the area. Please say it again."
+            : language === 'hi'
+            ? "क्षमा करें, मुझे क्षेत्रफल समझ नहीं आया। कृपया फिर से बताएं।"
+            : "క్షమించండి, నాకు వైశాల్యం అర్థం కాలేదు. దయచేసి మళ్లీ చెప్పండి.";
+          
+          speak(retryMessage);
+        }
+        break;
+    }
+  };
+
+  return (
+    <div className="relative">
+      <Button
+        onClick={isActive ? stopConversation : startConversation}
+        variant={isActive ? "default" : "outline"}
+        size="lg"
+        data-testid="button-voice-conversation"
+        className={`${isActive ? 'bg-primary hover:bg-primary-dark' : ''}`}
+      >
+        <MessageSquare className="h-5 w-5 mr-2" />
+        {isActive 
+          ? (language === 'en' ? 'Stop' : language === 'hi' ? 'बंद करें' : 'ఆపండి')
+          : (language === 'en' ? 'Start Voice Assistant' : language === 'hi' ? 'वॉयस असिस्टेंट शुरू करें' : 'వాయిస్ అసిస్టెంట్ ప్రారంభించండి')
+        }
+        {isListening && <Mic className="h-4 w-4 ml-2 animate-pulse text-red-500" />}
+        {isSpeaking && <Volume2 className="h-4 w-4 ml-2 animate-pulse text-blue-500" />}
+      </Button>
+      
+      {isActive && conversationLog.length > 0 && (
+        <Card className="absolute top-16 right-0 w-96 max-h-96 overflow-y-auto z-50 shadow-xl">
+          <div className="p-4 space-y-3">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold">
+                {language === 'en' ? 'Conversation' : language === 'hi' ? 'बातचीत' : 'సంభాషణ'}
+              </h3>
+              <div className="flex items-center space-x-2">
+                {isListening && (
+                  <span className="flex items-center text-xs text-red-600">
+                    <MicOff className="h-3 w-3 mr-1 animate-pulse" />
+                    {language === 'en' ? 'Listening...' : language === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
+                  </span>
+                )}
+                {isSpeaking && (
+                  <span className="flex items-center text-xs text-blue-600">
+                    <Volume2 className="h-3 w-3 mr-1 animate-pulse" />
+                    {language === 'en' ? 'Speaking...' : language === 'hi' ? 'बोल रहा हूँ...' : 'మాట్లాడుతున్నాను...'}
+                  </span>
+                )}
+              </div>
+            </div>
+            
+            {conversationLog.map((log, idx) => (
+              <div key={idx} className={`flex ${log.speaker === 'System' ? 'justify-start' : 'justify-end'}`}>
+                <div className={`max-w-[80%] rounded-lg p-2 ${
+                  log.speaker === 'System' 
+                    ? 'bg-blue-50 text-blue-900' 
+                    : 'bg-green-50 text-green-900'
+                }`}>
+                  <div className="text-xs font-medium mb-1">{log.speaker}</div>
+                  <div className="text-sm">{log.text}</div>
+                </div>
+              </div>
+            ))}
+            
+            {transcript && (
+              <div className="flex justify-end">
+                <div className="max-w-[80%] rounded-lg p-2 bg-gray-100 text-gray-700">
+                  <div className="text-xs italic">
+                    {language === 'en' ? 'Listening...' : language === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
+                  </div>
+                  <div className="text-sm">{transcript}</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+}
