@@ -22,44 +22,50 @@ interface ConversationalVoiceAssistantProps {
 }
 
 export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: ConversationalVoiceAssistantProps) {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { toast } = useToast();
   const [isActive, setIsActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [currentStep, setCurrentStep] = useState<string>("start");
+  const [currentStep, setCurrentStep] = useState<string>("select_language");
   const [transcript, setTranscript] = useState("");
   const [conversationData, setConversationData] = useState<any>({});
   const [conversationLog, setConversationLog] = useState<Array<{ speaker: string; text: string }>>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
   
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const conversationFlow: Record<string, ConversationStep> = {
-    start: {
-      question: language === 'en' ? "Hello! What is your name?" : 
-                language === 'hi' ? "नमस्ते! आपका नाम क्या है?" : 
+    select_language: {
+      question: "Hello! नमस्ते! హలో! Which language do you prefer? English, Hindi, or Telugu? आप कौन सी भाषा पसंद करते हैं? మీరు ఏ భాషను ఇష్టపడతారు?",
+      action: "get_language",
+      nextStep: "get_name"
+    },
+    get_name: {
+      question: selectedLanguage === 'en' ? "Hello! What is your name?" : 
+                selectedLanguage === 'hi' ? "नमस्ते! आपका नाम क्या है?" : 
                 "హలో! మీ పేరు ఏమిటి?",
       action: "get_name",
       nextStep: "ask_location"
     },
     ask_location: {
-      question: language === 'en' ? "Can I access your GPS location to analyze your field?" : 
-                language === 'hi' ? "क्या मैं आपके खेत का विश्लेषण करने के लिए GPS लोकेशन एक्सेस कर सकता हूं?" : 
+      question: selectedLanguage === 'en' ? "Can I access your GPS location to analyze your field?" : 
+                selectedLanguage === 'hi' ? "क्या मैं आपके खेत का विश्लेषण करने के लिए GPS लोकेशन एक्सेस कर सकता हूं?" : 
                 "మీ పొలాన్ని విశ్లేషించడానికి GPS లొకేషన్ యాక్సెస్ చేయవచ్చా?",
       action: "get_location_permission",
       nextStep: "ask_field_area"
     },
     ask_field_area: {
-      question: language === 'en' ? "What is the area of your field in hectares?" : 
-                language === 'hi' ? "आपके खेत का क्षेत्रफल हेक्टेयर में क्या है?" : 
+      question: selectedLanguage === 'en' ? "What is the area of your field in hectares?" : 
+                selectedLanguage === 'hi' ? "आपके खेत का क्षेत्रफल हेक्टेयर में क्या है?" : 
                 "మీ పొలం వైశాల్యం హెక్టార్లలో ఎంత?",
       action: "get_field_area",
       nextStep: "complete"
     },
     complete: {
-      question: language === 'en' ? "Thank you! Starting satellite analysis now..." : 
-                language === 'hi' ? "धन्यवाद! अब सैटेलाइट विश्लेषण शुरू कर रहे हैं..." : 
+      question: selectedLanguage === 'en' ? "Thank you! Starting satellite analysis now..." : 
+                selectedLanguage === 'hi' ? "धन्यवाद! अब सैटेलाइट विश्लेषण शुरू कर रहे हैं..." : 
                 "ధన్యవాదాలు! ఇప్పుడు ఉపగ్రహ విశ్లేషణ ప్రారంభిస్తున్నాం...",
       action: "start_analysis"
     }
@@ -73,7 +79,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : 'en-US';
+    recognition.lang = selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US';
     
     recognition.onstart = () => {
       setIsListening(true);
@@ -94,14 +100,15 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     };
     
     recognitionRef.current = recognition;
-  }, [language]);
+  }, [selectedLanguage]);
 
-  const speak = (text: string) => {
+  const speak = (text: string, lang?: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : 'en-US';
+      const speakLang = lang || (selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US');
+      utterance.lang = speakLang;
       utterance.rate = 0.9;
       
       utterance.onstart = () => {
@@ -129,12 +136,13 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
 
   const startConversation = () => {
     setIsActive(true);
-    setCurrentStep("start");
+    setCurrentStep("select_language");
     setConversationData({});
     setConversationLog([]);
+    setSelectedLanguage('en');
     
-    const step = conversationFlow["start"];
-    speak(step.question);
+    const step = conversationFlow["select_language"];
+    speak(step.question, 'en-US');
   };
 
   const stopConversation = () => {
@@ -155,6 +163,38 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     const step = conversationFlow[currentStep];
     
     switch (step.action) {
+      case "get_language":
+        const responseLower = response.toLowerCase();
+        let detectedLang = 'en';
+        
+        if (responseLower.includes('hindi') || responseLower.includes('हिंदी') || responseLower.includes('हिन्दी')) {
+          detectedLang = 'hi';
+        } else if (responseLower.includes('telugu') || responseLower.includes('తెలుగు')) {
+          detectedLang = 'te';
+        } else if (responseLower.includes('english') || responseLower.includes('इंग्लिश') || responseLower.includes('ఇంగ్లీష్')) {
+          detectedLang = 'en';
+        }
+        
+        setSelectedLanguage(detectedLang);
+        setLanguage(detectedLang as 'en' | 'hi' | 'te');
+        setConversationData({ ...conversationData, language: detectedLang });
+        
+        const confirmMessage = detectedLang === 'en' 
+          ? "Great! I'll continue in English."
+          : detectedLang === 'hi'
+          ? "बढ़िया! मैं हिंदी में जारी रखूंगा।"
+          : "బాగుంది! నేను తెలుగులో కొనసాగిస్తాను.";
+        
+        speak(confirmMessage);
+        
+        setTimeout(() => {
+          if (step.nextStep) {
+            setCurrentStep(step.nextStep);
+            speak(conversationFlow[step.nextStep].question);
+          }
+        }, 2000);
+        break;
+        
       case "get_name":
         setConversationData({ ...conversationData, userName: response });
         if (step.nextStep) {
@@ -183,9 +223,9 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
                 longitude 
               });
               
-              const locationMessage = language === 'en' 
+              const locationMessage = selectedLanguage === 'en' 
                 ? `Great! I've got your location at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}.`
-                : language === 'hi'
+                : selectedLanguage === 'hi'
                 ? `बढ़िया! मुझे आपका स्थान मिल गया ${latitude.toFixed(4)}, ${longitude.toFixed(4)}.`
                 : `బాగుంది! మీ లొకేషన్ ${latitude.toFixed(4)}, ${longitude.toFixed(4)} లభించింది.`;
               
@@ -198,9 +238,9 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
                 }
               }, 2000);
             } catch (error) {
-              const errorMessage = language === 'en' 
+              const errorMessage = selectedLanguage === 'en' 
                 ? "I couldn't access your location. Please enable GPS."
-                : language === 'hi'
+                : selectedLanguage === 'hi'
                 ? "मुझे आपका स्थान नहीं मिल पाया। कृपया GPS सक्षम करें।"
                 : "మీ లొకేషన్ యాక్సెస్ చేయలేకపోయాను. దయచేసి GPS ఎనేబుల్ చేయండి.";
               
@@ -209,9 +249,9 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
             }
           }
         } else {
-          const declineMessage = language === 'en'
+          const declineMessage = selectedLanguage === 'en'
             ? "Okay, please manually enter your location then."
-            : language === 'hi'
+            : selectedLanguage === 'hi'
             ? "ठीक है, कृपया अपना स्थान मैन्युअल रूप से दर्ज करें।"
             : "సరే, దయచేసి మీ లొకేషన్ మాన్యువల్‌గా నమోదు చేయండి.";
           
@@ -239,9 +279,9 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
             }, 2000);
           }
         } else {
-          const retryMessage = language === 'en'
+          const retryMessage = selectedLanguage === 'en'
             ? "Sorry, I didn't catch the area. Please say it again."
-            : language === 'hi'
+            : selectedLanguage === 'hi'
             ? "क्षमा करें, मुझे क्षेत्रफल समझ नहीं आया। कृपया फिर से बताएं।"
             : "క్షమించండి, నాకు వైశాల్యం అర్థం కాలేదు. దయచేసి మళ్లీ చెప్పండి.";
           
@@ -262,7 +302,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
       >
         <MessageSquare className="h-5 w-5 mr-2" />
         {isActive 
-          ? (language === 'en' ? 'Stop' : language === 'hi' ? 'बंद करें' : 'ఆపండి')
+          ? (selectedLanguage === 'en' ? 'Stop' : selectedLanguage === 'hi' ? 'बंद करें' : 'ఆపండి')
           : (language === 'en' ? 'Start Voice Assistant' : language === 'hi' ? 'वॉयस असिस्टेंट शुरू करें' : 'వాయిస్ అసిస్టెంట్ ప్రారంభించండి')
         }
         {isListening && <Mic className="h-4 w-4 ml-2 animate-pulse text-red-500" />}
@@ -274,19 +314,19 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
           <div className="p-4 space-y-3">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold">
-                {language === 'en' ? 'Conversation' : language === 'hi' ? 'बातचीत' : 'సంభాషణ'}
+                {selectedLanguage === 'en' ? 'Conversation' : selectedLanguage === 'hi' ? 'बातचीत' : 'సంభాషణ'}
               </h3>
               <div className="flex items-center space-x-2">
                 {isListening && (
                   <span className="flex items-center text-xs text-red-600">
                     <MicOff className="h-3 w-3 mr-1 animate-pulse" />
-                    {language === 'en' ? 'Listening...' : language === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
+                    {selectedLanguage === 'en' ? 'Listening...' : selectedLanguage === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
                   </span>
                 )}
                 {isSpeaking && (
                   <span className="flex items-center text-xs text-blue-600">
                     <Volume2 className="h-3 w-3 mr-1 animate-pulse" />
-                    {language === 'en' ? 'Speaking...' : language === 'hi' ? 'बोल रहा हूँ...' : 'మాట్లాడుతున్నాను...'}
+                    {selectedLanguage === 'en' ? 'Speaking...' : selectedLanguage === 'hi' ? 'बोल रहा हूँ...' : 'మాట్లాడుతున్నాను...'}
                   </span>
                 )}
               </div>
@@ -309,7 +349,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
               <div className="flex justify-end">
                 <div className="max-w-[80%] rounded-lg p-2 bg-gray-100 text-gray-700">
                   <div className="text-xs italic">
-                    {language === 'en' ? 'Listening...' : language === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
+                    {selectedLanguage === 'en' ? 'Listening...' : selectedLanguage === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
                   </div>
                   <div className="text-sm">{transcript}</div>
                 </div>
