@@ -49,44 +49,21 @@ export function SimpleGPSLocation({ onCoordinateSelect }: SimpleGPSLocationProps
     }
   };
 
-  const useSampleLocation = () => {
-    const sampleCoords = [
-      { lat: 17.3850, lng: 78.4867, name: 'Hyderabad' },
-      { lat: 16.5062, lng: 80.6480, name: 'Vijayawada' },
-      { lat: 25.5941, lng: 85.1376, name: 'Patna' }
-    ];
-    
-    const coord = sampleCoords[Math.floor(Math.random() * sampleCoords.length)];
-    setLocation({ lat: coord.lat, lng: coord.lng, accuracy: 10 });
-    onCoordinateSelect(coord.lat, coord.lng);
-  };
-
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-md font-medium">GPS Location</h3>
-        <div className="flex space-x-2">
-          <Button
-            onClick={handleGetLocation}
-            disabled={isGettingLocation}
-            className="flex items-center space-x-2"
-          >
-            {isGettingLocation ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <MapPin className="h-4 w-4" />
-            )}
-            <span>{isGettingLocation ? 'GPS' : 'Get GPS'}</span>
-          </Button>
-          <Button
-            onClick={useSampleLocation}
-            variant="outline"
-            size="sm"
-          >
-            Sample
-          </Button>
-        </div>
-      </div>
+      <Button
+        data-testid="button-get-gps"
+        onClick={handleGetLocation}
+        disabled={isGettingLocation}
+        className="flex items-center space-x-2"
+      >
+        {isGettingLocation ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <MapPin className="h-4 w-4" />
+        )}
+        <span>{isGettingLocation ? 'Getting...' : 'Get GPS'}</span>
+      </Button>
 
       {location && (
         <Alert className="border-green-200 bg-green-50">
