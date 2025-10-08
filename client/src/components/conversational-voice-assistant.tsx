@@ -136,6 +136,16 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
   }, [selectedLanguage, isActive, isSpeaking]);
 
   const speak = (text: string, lang?: string, callback?: () => void) => {
+    // Stop recognition immediately when we start speaking
+    if (recognitionRef.current && isListening) {
+      try {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      } catch (e) {
+        console.log('Recognition stop error:', e);
+      }
+    }
+    
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       
@@ -172,31 +182,29 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
       }
       
       utterance.onstart = () => {
+        console.log('Speaking:', text);
         setIsSpeaking(true);
         addToConversationLog('System', text);
-        if (recognitionRef.current && isListening) {
-          try {
-            recognitionRef.current.stop();
-          } catch (e) {
-            console.log('Recognition stop error:', e);
-          }
-        }
       };
       
       utterance.onend = () => {
+        console.log('Finished speaking');
         setIsSpeaking(false);
+        
+        // Wait a bit longer before starting to listen again
         if (callback) {
-          setTimeout(callback, 800);
-        } else if (isActive && recognitionRef.current && !isListening) {
+          setTimeout(callback, 1000);
+        } else if (isActive && recognitionRef.current) {
           setTimeout(() => {
-            if (recognitionRef.current && isActive) {
+            if (recognitionRef.current && isActive && !isSpeaking) {
               try {
+                console.log('Starting recognition after speech');
                 recognitionRef.current.start();
               } catch (e) {
                 console.log('Recognition start error:', e);
               }
             }
-          }, 1000);
+          }, 1200);
         }
       };
       
@@ -251,6 +259,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
   };
 
   const handleUserResponse = async (response: string) => {
+    console.log('User response:', response, 'Current step:', currentStep);
     addToConversationLog('User', response);
     
     const step = getConversationFlow()[currentStep];
@@ -308,12 +317,39 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
         break;
         
       case "get_location_permission":
-        const affirmativeWords = ['yes', 'yeah', 'ok', 'okay', 'sure', 'हां', 'ठीक', 'అవును', 'సరే'];
-        const isAffirmative = affirmativeWords.some(word => 
-          response.toLowerCase().includes(word)
+        const affirmativeWords = ['yes', 'yeah', 'ok', 'okay', 'sure', 'yep', 'yup', 'allow', 'हां', 'हाँ', 'ठीक', 'जी', 'అవును', 'సరే', 'ఓకే'];
+        const negativeWords = ['nope', 'नहीं', 'లేదు', 'వద్దు'];
+        
+        const responseLowercase = response.toLowerCase().trim();
+        
+        // Use word boundary for English "yes" and "no" to avoid false positives
+        const hasYes = /\b(yes|yeah|yep|yup|ok|okay|sure|allow)\b/i.test(response);
+        const hasNo = /\b(no|nope)\b/i.test(response);
+        
+        // Check for non-English affirmative/negative words
+        const hasOtherAffirmative = affirmativeWords.slice(7).some(word => 
+          responseLowercase.includes(word)
+        );
+        const hasOtherNegative = negativeWords.slice(1).some(word =>
+          responseLowercase.includes(word)
         );
         
-        if (isAffirmative) {
+        const isAffirmative = hasYes || hasOtherAffirmative;
+        const isNegative = hasNo || hasOtherNegative;
+        
+        // If we don't detect clear yes/no, ask again
+        if (!isAffirmative && !isNegative) {
+          const retryMessage = selectedLanguage === 'en'
+            ? "Please say yes or no. Can I access your GPS location?"
+            : selectedLanguage === 'hi'
+            ? "कृपया हां या नहीं कहें। क्या मैं GPS लोकेशन एक्सेस कर सकता हूं?"
+            : "దయచేసి అవును లేదా లేదు అనండి. GPS లొకేషన్ యాక్సెస్ చేయవచ్చా?";
+          
+          speak(retryMessage);
+          return;
+        }
+        
+        if (isAffirmative && !isNegative) {
           if (navigator.geolocation) {
             try {
               const position = await new Promise<GeolocationPosition>((resolve, reject) => {
