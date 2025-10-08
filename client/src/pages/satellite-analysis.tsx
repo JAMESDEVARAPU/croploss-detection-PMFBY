@@ -34,7 +34,7 @@ export default function SatelliteAnalysis({ user, onLogout }: SatelliteAnalysisP
 
   return (
     <div 
-      className="min-h-screen relative bg-cover bg-center bg-no-repeat bg-fixed"
+      className="min-h-screen pb-20 relative bg-cover bg-center bg-no-repeat bg-fixed"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/80 to-white/85 backdrop-blur-[2px]"></div>
