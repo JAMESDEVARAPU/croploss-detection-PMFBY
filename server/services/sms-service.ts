@@ -19,8 +19,8 @@ const SMS_TEMPLATES: Record<string, SMSTemplate> = {
 
 export class SMSService {
   private twilioAccountSid = process.env.TWILIO_ACCOUNT_SID || process.env.SMS_ACCOUNT_SID;
-  private twilioAuthToken = process.env.TWILIO_AUTH_TOKEN || process.env.SMS_AUTH_TOKEN;
-  private twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER || process.env.SMS_PHONE_NUMBER;
+  private twilioAuthToken = process.env.TWILIO_AUTH_TOKEN || process.env.SMS_AUTH_TOKEN || process.env.SMS_API_KEY;
+  private twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER || process.env.SMS_PHONE_NUMBER || process.env.SMS_SENDER_ID;
 
   async sendSMS(phoneNumber: string, templateKey: string, language: string, variables: Record<string, string>): Promise<{ success: boolean; error?: string }> {
     try {
