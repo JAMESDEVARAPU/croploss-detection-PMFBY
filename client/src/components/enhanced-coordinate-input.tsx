@@ -385,16 +385,19 @@ export function EnhancedCoordinateInput({ onAnalysisStart }: CoordinateInputProp
   return (
     <Card className="mb-8">
       <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <MapPin className="h-5 w-5 text-primary" />
-          <span>Crop Loss Analysis</span>
-          {isOfflineMode && (
-            <div className="flex items-center space-x-1 bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
-              <WifiOff className="h-3 w-3" />
-              <span>Offline Mode</span>
-            </div>
-          )}
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center space-x-2">
+            <MapPin className="h-5 w-5 text-primary" />
+            <span className="text-lg">Crop Loss Analysis</span>
+            {isOfflineMode && (
+              <div className="flex items-center space-x-1 bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
+                <WifiOff className="h-3 w-3" />
+                <span>Offline Mode</span>
+              </div>
+            )}
+          </CardTitle>
+          <SimpleGPSLocation onCoordinateSelect={handleCoordinateSelect} />
+        </div>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="coordinates" className="w-full">
@@ -526,10 +529,13 @@ export function EnhancedCoordinateInput({ onAnalysisStart }: CoordinateInputProp
                 </Button>
               </div>
 
-              {/* GPS Location */}
-              <SimpleGPSLocation
-                onCoordinateSelect={handleCoordinateSelect}
-              />
+              {/* Map placeholder or additional info */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-center text-center">
+                <div>
+                  <MapPin className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600">Use GPS button above to auto-fill coordinates</p>
+                </div>
+              </div>
             </div>
           </TabsContent>
           

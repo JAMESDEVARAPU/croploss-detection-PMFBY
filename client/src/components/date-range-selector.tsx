@@ -259,19 +259,6 @@ export function DateRangeSelector({ onDateRangeChange, initialStartDate, initial
           </Alert>
         )}
 
-        {/* Date Range Info */}
-        {validation.valid && dateInfo && (
-          <Alert>
-            <Info className="h-4 w-4" />
-            <AlertDescription>
-              <div className="space-y-1">
-                <p><strong>{translations[language].duration}:</strong> {dateInfo.days} {translations[language].days} ({dateInfo.months} {translations[language].months})</p>
-                <p><strong>{translations[language].season}:</strong> {dateInfo.season}</p>
-                <p><strong>{translations[language].analysis}:</strong> {translations[language].analysisText}</p>
-              </div>
-            </AlertDescription>
-          </Alert>
-        )}
 
         {/* Preset Buttons */}
         <div className="space-y-2">

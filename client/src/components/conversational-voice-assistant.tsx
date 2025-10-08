@@ -79,19 +79,28 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     
     recognition.continuous = false;
     recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
     recognition.lang = selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US';
     
     recognition.onstart = () => {
+      console.log('Recognition started for language:', recognition.lang);
       setIsListening(true);
     };
     
     recognition.onend = () => {
+      console.log('Recognition ended');
+      setIsListening(false);
+    };
+    
+    recognition.onerror = (event: any) => {
+      console.log('Recognition error:', event.error);
       setIsListening(false);
     };
     
     recognition.onresult = (event: any) => {
       const result = event.results[0];
       const transcript = result[0].transcript;
+      console.log('Recognized:', transcript);
       setTranscript(transcript);
       
       if (result.isFinal) {
@@ -100,6 +109,16 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     };
     
     recognitionRef.current = recognition;
+    
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          console.log('Recognition cleanup error:', e);
+        }
+      }
+    };
   }, [selectedLanguage]);
 
   const speak = (text: string, lang?: string, callback?: () => void) => {
@@ -153,15 +172,17 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
       utterance.onend = () => {
         setIsSpeaking(false);
         if (callback) {
-          setTimeout(callback, 500);
+          setTimeout(callback, 800);
         } else if (isActive && recognitionRef.current && !isListening) {
           setTimeout(() => {
-            try {
-              recognitionRef.current.start();
-            } catch (e) {
-              console.log('Recognition already started');
+            if (recognitionRef.current && isActive) {
+              try {
+                recognitionRef.current.start();
+              } catch (e) {
+                console.log('Recognition start error:', e);
+              }
             }
-          }, 800);
+          }, 1000);
         }
       };
       

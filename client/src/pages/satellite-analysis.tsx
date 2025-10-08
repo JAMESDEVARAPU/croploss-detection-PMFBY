@@ -180,20 +180,13 @@ export default function SatelliteAnalysis({ user, onLogout }: SatelliteAnalysisP
         <div className="space-y-6">
           {/* Conversational Voice Assistant */}
           <Card className="bg-gradient-to-r from-blue-50/90 to-green-50/90 backdrop-blur border-2 border-primary/20 shadow-lg">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {language === 'en' ? '🎤 Voice-Guided Analysis' : 
-                     language === 'hi' ? '🎤 वॉयस-गाइडेड विश्लेषण' : 
-                     '🎤 వాయిస్-గైడెడ్ విశ్లేషణ'}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {language === 'en' ? 'Start a voice conversation to automatically analyze your field' : 
-                     language === 'hi' ? 'अपने खेत का स्वचालित विश्लेषण करने के लिए वॉयस बातचीत शुरू करें' : 
-                     'మీ పొలాన్ని స్వయంచాలకంగా విశ్లేషించడానికి వాయిస్ సంభాషణ ప్రారంభించండి'}
-                  </p>
-                </div>
+                <h3 className="text-base font-semibold text-gray-900">
+                  {language === 'en' ? '🎤 Voice-Guided Analysis' : 
+                   language === 'hi' ? '🎤 वॉयस-गाइडेड विश्लेषण' : 
+                   '🎤 వాయిస్-గైడెడ్ విశ్లేషణ'}
+                </h3>
                 <ConversationalVoiceAssistant 
                   user={user}
                   onAnalysisComplete={handleVoiceAnalysisComplete}
