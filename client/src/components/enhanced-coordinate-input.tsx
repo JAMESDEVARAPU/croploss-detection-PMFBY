@@ -70,10 +70,10 @@ export function EnhancedCoordinateInput({ onAnalysisStart }: CoordinateInputProp
           
           // Extract proper administrative hierarchy
           const admin = data.localityInfo?.administrative || [];
-          const village = data.locality || data.city || admin.find(a => a.adminLevel === 8)?.name || 'Unknown Village';
-          const mandal = admin.find(a => a.adminLevel === 6)?.name || data.principalSubdivision || 'Unknown Mandal';
-          const district = admin.find(a => a.adminLevel === 4)?.name || 'Unknown District';
-          const state = admin.find(a => a.adminLevel === 2)?.name || data.principalSubdivision || 'Unknown State';
+          const village = data.locality || data.city || admin.find((a: any) => a.adminLevel === 8)?.name || 'Unknown Village';
+          const mandal = admin.find((a: any) => a.adminLevel === 6)?.name || data.principalSubdivision || 'Unknown Mandal';
+          const district = admin.find((a: any) => a.adminLevel === 4)?.name || 'Unknown District';
+          const state = admin.find((a: any) => a.adminLevel === 2)?.name || data.principalSubdivision || 'Unknown State';
           
           return { village, mandal, district, state };
         }
@@ -276,7 +276,7 @@ export function EnhancedCoordinateInput({ onAnalysisStart }: CoordinateInputProp
     },
     onSuccess: (data) => {
       const analysisMode = data.analysisMode || 'instant';
-      const modeMessages = {
+      const modeMessages: Record<string, string> = {
         'tensorflow': 'Analysis completed using TensorFlow AI model.',
         'instant': 'Analysis completed using fast client-side processing.',
         'offline': 'Analysis completed using offline CSV data.'
@@ -291,7 +291,7 @@ export function EnhancedCoordinateInput({ onAnalysisStart }: CoordinateInputProp
       (window as any).currentAnalysisData = data.analysis;
       queryClient.setQueryData(["/api/crop-analysis", data.analysisId], data.analysis);
       
-      onAnalysisStart(data.analysisId || data.id, data.analysis);
+      onAnalysisStart(data.analysisId, data.analysis);
       setFormData({
         latitude: "",
         longitude: "",
