@@ -27,7 +27,7 @@ export default function GpsCoordinates({ user }: GpsCoordinatesProps) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center h-16 space-x-3">
               <MapPin className="text-green-600 h-8 w-8" />
-              <h1 className="text-xl font-semibold text-gray-900">GPS Coordinates</h1>
+              <h1 className="text-xl font-semibold text-gray-900">Krishirakshak</h1>
             </div>
           </div>
         </header>
@@ -37,7 +37,7 @@ export default function GpsCoordinates({ user }: GpsCoordinatesProps) {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Navigation className="h-5 w-5 text-green-600" />
-                <span>Enter Field Coordinates</span>
+                <span>Crop Loss Analysis</span>
               </CardTitle>
             </CardHeader>
             <CardContent>

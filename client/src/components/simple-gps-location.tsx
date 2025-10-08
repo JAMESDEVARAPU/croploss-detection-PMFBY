@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapPin, Loader2, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -10,6 +10,7 @@ interface SimpleGPSLocationProps {
 export function SimpleGPSLocation({ onCoordinateSelect }: SimpleGPSLocationProps) {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lng: number; accuracy: number } | null>(null);
+  const [showFlash, setShowFlash] = useState(false);
 
   const handleGetLocation = async () => {
     setIsGettingLocation(true);
@@ -29,6 +30,14 @@ export function SimpleGPSLocation({ onCoordinateSelect }: SimpleGPSLocationProps
       
       setLocation({ lat, lng, accuracy });
       onCoordinateSelect(lat, lng);
+      
+      // Trigger lightning flash effect
+      setShowFlash(true);
+      setTimeout(() => setShowFlash(false), 150);
+      setTimeout(() => setShowFlash(true), 300);
+      setTimeout(() => setShowFlash(false), 450);
+      setTimeout(() => setShowFlash(true), 600);
+      setTimeout(() => setShowFlash(false), 750);
       
     } catch (error: any) {
       let errorMessage = 'GPS location failed. ';
@@ -65,8 +74,8 @@ export function SimpleGPSLocation({ onCoordinateSelect }: SimpleGPSLocationProps
         <span>{isGettingLocation ? 'Getting...' : 'Get GPS'}</span>
       </Button>
 
-      {location && (
-        <Alert className="border-green-200 bg-green-50">
+      {location && showFlash && (
+        <Alert className="border-green-200 bg-green-50 animate-pulse">
           <CheckCircle className="h-4 w-4 text-green-600" />
           <AlertDescription>
             <div className="space-y-1">

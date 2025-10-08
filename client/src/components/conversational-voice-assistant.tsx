@@ -266,8 +266,12 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
         
         speak(confirmMessage, undefined, () => {
           if (step.nextStep) {
-            setCurrentStep(step.nextStep);
-            speak(conversationFlow[step.nextStep].question);
+            const nextStepKey = step.nextStep;
+            // Add delay to allow recognition to reinitialize with new language
+            setTimeout(() => {
+              setCurrentStep(nextStepKey);
+              speak(conversationFlow[nextStepKey].question);
+            }, 500);
           }
         });
         break;
