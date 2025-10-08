@@ -48,23 +48,8 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // REST API only - no static frontend serving needed
-  app.get("/", (req, res) => {
-    res.json({ 
-      message: "Crop Loss Assessment API", 
-      version: "1.0.0",
-      endpoints: {
-        users: "/api/users",
-        cropAnalysis: "/api/crop-analysis",
-        pmfbyRules: "/api/pmfby-rules",
-        offlineAnalysis: "/api/offline-analysis",
-        xaiAnalysis: "/api/xai-analysis",
-        voiceCommand: "/api/voice-command",
-        weather: "/api/weather/:lat/:lng",
-        modelInfo: "/api/model/info"
-      }
-    });
-  });
+  // Serve the built static files
+  serveStatic(app);
 
   const port = parseInt(process.env.PORT || "5000", 10);
   server.listen(port, '0.0.0.0', () => {

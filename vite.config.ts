@@ -37,4 +37,8 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'wouter'],
+    exclude: ['@tensorflow/tfjs'],
+  },
 });

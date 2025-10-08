@@ -23,6 +23,11 @@ export async function setupVite(app: Express, server: Server) {
     server: { middlewareMode: true },
     appType: "spa",
     root: path.resolve(__dirname, "../client"),
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'wouter', 'lucide-react'],
+      exclude: ['@tensorflow/tfjs'],
+      force: false,
+    },
   });
 
   app.use(vite.ssrFixStacktrace);

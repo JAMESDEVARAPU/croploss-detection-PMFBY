@@ -7,7 +7,12 @@ import { LanguageProvider } from "./hooks/use-language";
 import { WakeWordProvider } from "./hooks/use-wake-word";
 import { LanguageSwitcher } from "./components/language-switcher";
 import { WakeWordIndicator } from "./components/wake-word-indicator";
+import { BottomNav } from "./components/bottom-nav";
 import SatelliteAnalysis from "@/pages/satellite-analysis";
+import GpsCoordinates from "@/pages/gps-coordinates";
+import VoiceAnalysis from "@/pages/voice-analysis";
+import DistrictAnalysis from "@/pages/district-analysis";
+import Profile from "@/pages/profile";
 import LoginPage from "@/pages/login";
 import NotFound from "@/pages/not-found";
 
@@ -56,10 +61,17 @@ function Router() {
   }
 
   return (
-    <Switch>
-      <Route path="/" component={() => <SatelliteAnalysis user={user} onLogout={handleLogout} />} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <Switch>
+        <Route path="/" component={() => <SatelliteAnalysis user={user} onLogout={handleLogout} />} />
+        <Route path="/gps" component={() => <GpsCoordinates user={user} />} />
+        <Route path="/voice-analysis" component={() => <VoiceAnalysis user={user} />} />
+        <Route path="/district-analysis" component={() => <DistrictAnalysis user={user} />} />
+        <Route path="/profile" component={() => <Profile user={user} onLogout={handleLogout} />} />
+        <Route component={NotFound} />
+      </Switch>
+      <BottomNav />
+    </>
   );
 }
 

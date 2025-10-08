@@ -24,12 +24,12 @@ localPort = 33205
 externalPort = 3001
 
 [[ports]]
-localPort = 34565
-externalPort = 3002
+localPort = 33565
+externalPort = 3003
 
 [[ports]]
-localPort = 46047
-externalPort = 3003
+localPort = 34565
+externalPort = 3002
 
 [env]
 PORT = "5000"
@@ -50,12 +50,13 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev"
-
-[workflows.workflow.metadata]
-outputType = "console"
+waitForPort = 5000
 
 [agent]
 integrations = ["javascript_anthropic:1.0.0", "javascript_log_in_with_replit:1.0.0", "javascript_database:1.0.0", "javascript_openai:1.0.0"]
