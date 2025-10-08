@@ -292,10 +292,19 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
         
       case "get_name":
         setConversationData({ ...conversationData, userName: response });
-        if (step.nextStep) {
-          setCurrentStep(step.nextStep);
-          speak(getConversationFlow()[step.nextStep].question);
-        }
+        
+        const nameConfirmation = selectedLanguage === 'en' 
+          ? `Nice to meet you, ${response}!`
+          : selectedLanguage === 'hi'
+          ? `आपसे मिलकर खुशी हुई, ${response}!`
+          : `మిమ్మల్ని కలసినందుకు సంతోషం, ${response}!`;
+        
+        speak(nameConfirmation, undefined, () => {
+          if (step.nextStep) {
+            setCurrentStep(step.nextStep);
+            speak(getConversationFlow()[step.nextStep].question);
+          }
+        });
         break;
         
       case "get_location_permission":

@@ -14,6 +14,7 @@ import VoiceAnalysis from "@/pages/voice-analysis";
 import DistrictAnalysis from "@/pages/district-analysis";
 import Profile from "@/pages/profile";
 import LoginPage from "@/pages/login";
+import AnalysisDetail from "@/pages/analysis-detail";
 import NotFound from "@/pages/not-found";
 
 import { useState, useEffect } from "react";
@@ -68,6 +69,7 @@ function Router() {
         <Route path="/voice-analysis" component={() => <VoiceAnalysis user={user} />} />
         <Route path="/district-analysis" component={() => <DistrictAnalysis user={user} />} />
         <Route path="/profile" component={() => <Profile user={user} onLogout={handleLogout} />} />
+        <Route path="/analysis/:id" component={AnalysisDetail} />
         <Route component={NotFound} />
       </Switch>
       <BottomNav />

@@ -13,7 +13,8 @@ import {
   Calculator,
   NotebookPen,
   MapPin,
-  Building
+  Building,
+  ExternalLink
 } from "lucide-react";
 import { useLanguage } from "../hooks/use-language";
 import { useState, useEffect } from "react";
@@ -71,6 +72,10 @@ export function AnalysisResults({ analysis, isLoading }: AnalysisResultsProps) {
   const confidence = Math.round(analysis.confidence || 0);
   const acquisitionDates = analysis.acquisitionDates as Record<string, string> | undefined;
 
+  const openInNewTab = () => {
+    window.open(`/analysis/${analysis.id}`, '_blank');
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
       {/* Satellite Images Viewer */}
@@ -92,6 +97,15 @@ export function AnalysisResults({ analysis, isLoading }: AnalysisResultsProps) {
                   <Clock className="h-3 w-3 mr-1" />
                   {analysis.analysisDate ? new Date(analysis.analysisDate).toLocaleDateString() : 'N/A'}
                 </Badge>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={openInNewTab}
+                  data-testid="button-open-new-tab"
+                  className="ml-2"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </Button>
               </div>
             </CardTitle>
           </CardHeader>
