@@ -48,9 +48,23 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // Skip Vite middleware in development due to configuration issues
-  // Use static serving for both development and production
-  serveStatic(app);
+  // REST API only - no static frontend serving needed
+  app.get("/", (req, res) => {
+    res.json({ 
+      message: "Crop Loss Assessment API", 
+      version: "1.0.0",
+      endpoints: {
+        users: "/api/users",
+        cropAnalysis: "/api/crop-analysis",
+        pmfbyRules: "/api/pmfby-rules",
+        offlineAnalysis: "/api/offline-analysis",
+        xaiAnalysis: "/api/xai-analysis",
+        voiceCommand: "/api/voice-command",
+        weather: "/api/weather/:lat/:lng",
+        modelInfo: "/api/model/info"
+      }
+    });
+  });
 
   const port = parseInt(process.env.PORT || "5000", 10);
   server.listen(port, '0.0.0.0', () => {
