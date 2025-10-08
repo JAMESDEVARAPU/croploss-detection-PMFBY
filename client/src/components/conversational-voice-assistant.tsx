@@ -36,7 +36,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const conversationFlow: Record<string, ConversationStep> = {
+  const getConversationFlow = (): Record<string, ConversationStep> => ({
     select_language: {
       question: "Hello! नमस्ते! హలో! Which language do you prefer? English, Hindi, or Telugu? आप कौन सी भाषा पसंद करते हैं? మీరు ఏ భాషను ఇష్టపడతారు?",
       action: "get_language",
@@ -69,7 +69,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
                 "ధన్యవాదాలు! ఇప్పుడు ఉపగ్రహ విశ్లేషణ ప్రారంభిస్తున్నాం...",
       action: "start_analysis"
     }
-  };
+  });
 
   useEffect(() => {
     if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
@@ -226,7 +226,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     setConversationLog([]);
     setSelectedLanguage('en');
     
-    const step = conversationFlow["select_language"];
+    const step = getConversationFlow()["select_language"];
     speak(step.question, 'en-US', () => {
       if (recognitionRef.current) {
         try {
@@ -253,7 +253,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
   const handleUserResponse = async (response: string) => {
     addToConversationLog('User', response);
     
-    const step = conversationFlow[currentStep];
+    const step = getConversationFlow()[currentStep];
     
     switch (step.action) {
       case "get_language":
@@ -284,7 +284,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
             // Add delay to allow recognition to reinitialize with new language
             setTimeout(() => {
               setCurrentStep(nextStepKey);
-              speak(conversationFlow[nextStepKey].question);
+              speak(getConversationFlow()[nextStepKey].question);
             }, 500);
           }
         });
@@ -294,7 +294,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
         setConversationData({ ...conversationData, userName: response });
         if (step.nextStep) {
           setCurrentStep(step.nextStep);
-          speak(conversationFlow[step.nextStep].question);
+          speak(getConversationFlow()[step.nextStep].question);
         }
         break;
         
@@ -327,7 +327,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
               speak(locationMessage, undefined, () => {
                 if (step.nextStep) {
                   setCurrentStep(step.nextStep);
-                  speak(conversationFlow[step.nextStep].question);
+                  speak(getConversationFlow()[step.nextStep].question);
                 }
               });
             } catch (error) {
@@ -361,7 +361,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
           
           if (step.nextStep) {
             setCurrentStep(step.nextStep);
-            speak(conversationFlow[step.nextStep].question, undefined, () => {
+            speak(getConversationFlow()[step.nextStep].question, undefined, () => {
               onAnalysisComplete({
                 ...conversationData,
                 fieldArea
