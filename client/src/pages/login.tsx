@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Phone, User, Leaf } from "lucide-react";
+import backgroundImage from "@assets/seva_1759926468291.jpg";
 
 interface LoginProps {
   onLogin: (user: any) => void;
@@ -36,8 +37,12 @@ export default function Login({ onLogin }: LoginProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/50 to-white/60 backdrop-blur-sm"></div>
+      <Card className="w-full max-w-md relative z-10 bg-white/95 backdrop-blur shadow-2xl border-2 border-white/60">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <Leaf className="h-12 w-12 text-green-600" />
@@ -47,31 +52,33 @@ export default function Login({ onLogin }: LoginProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="name">Full Name</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+            <div className="relative mt-1.5">
+              <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 id="name"
                 type="text"
                 placeholder="Enter your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-11 text-base"
+                data-testid="input-name"
               />
             </div>
           </div>
           
           <div>
-            <Label htmlFor="mobile">Mobile Number</Label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Label htmlFor="mobile" className="text-sm font-medium">Mobile Number</Label>
+            <div className="relative mt-1.5">
+              <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 id="mobile"
                 type="tel"
                 placeholder="+91 9876543210"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-11 text-base"
+                data-testid="input-mobile"
               />
             </div>
           </div>
@@ -79,7 +86,8 @@ export default function Login({ onLogin }: LoginProps) {
           <Button
             onClick={handleLogin}
             disabled={!mobile || !name || loading}
-            className="w-full"
+            className="w-full h-12 text-base font-semibold bg-green-700 hover:bg-green-800 transition-colors"
+            data-testid="button-login"
           >
             {loading ? "Logging in..." : "Login"}
           </Button>
