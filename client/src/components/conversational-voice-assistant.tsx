@@ -90,6 +90,20 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     recognition.onend = () => {
       console.log('Recognition ended');
       setIsListening(false);
+      
+      // Auto-restart recognition if conversation is still active and not speaking
+      if (isActive && !isSpeaking) {
+        setTimeout(() => {
+          if (recognitionRef.current && isActive && !isSpeaking) {
+            try {
+              console.log('Auto-restarting recognition...');
+              recognitionRef.current.start();
+            } catch (e) {
+              console.log('Auto-restart failed:', e);
+            }
+          }
+        }, 100);
+      }
     };
     
     recognition.onerror = (event: any) => {
@@ -119,7 +133,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
         }
       }
     };
-  }, [selectedLanguage]);
+  }, [selectedLanguage, isActive, isSpeaking]);
 
   const speak = (text: string, lang?: string, callback?: () => void) => {
     if ('speechSynthesis' in window) {
