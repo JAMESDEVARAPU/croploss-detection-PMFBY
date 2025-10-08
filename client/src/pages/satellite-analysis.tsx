@@ -22,6 +22,7 @@ import {
   ArrowLeft,
   Satellite
 } from "lucide-react";
+import backgroundImage from "@assets/seva_1759926468291.jpg";
 
 interface SatelliteAnalysisProps {
   user: any;
@@ -79,9 +80,14 @@ export default function SatelliteAnalysis({ user, onLogout }: SatelliteAnalysisP
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div 
+      className="min-h-screen relative bg-cover bg-center bg-no-repeat bg-fixed"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/80 to-white/85 backdrop-blur-[2px]"></div>
+      
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white/95 backdrop-blur shadow-sm border-b relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
@@ -170,10 +176,10 @@ export default function SatelliteAnalysis({ user, onLogout }: SatelliteAnalysisP
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         <div className="space-y-6">
           {/* Conversational Voice Assistant */}
-          <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-primary/20">
+          <Card className="bg-gradient-to-r from-blue-50/90 to-green-50/90 backdrop-blur border-2 border-primary/20 shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -219,7 +225,7 @@ export default function SatelliteAnalysis({ user, onLogout }: SatelliteAnalysisP
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-12">
+      <footer className="bg-white/95 backdrop-blur border-t mt-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
