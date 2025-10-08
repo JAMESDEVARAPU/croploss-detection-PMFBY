@@ -5,10 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Compass, Leaf, Phone, Satellite, MapPin, WifiOff } from "lucide-react";
 import { SimpleGPSLocation } from "./simple-gps-location";
-import { OfflineDistrictLookup } from "./offline-district-lookup";
 import { DateRangeSelector } from "./date-range-selector";
 import { useLanguage } from "../hooks/use-language";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -400,19 +398,7 @@ export function EnhancedCoordinateInput({ onAnalysisStart }: CoordinateInputProp
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="coordinates" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="coordinates" className="flex items-center gap-2">
-              <Compass className="h-4 w-4" />
-              GPS Coordinates
-            </TabsTrigger>
-            <TabsTrigger value="district" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              District & Mandal
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="coordinates" className="space-y-4">
+        <div className="w-full space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Input Form */}
               <div className="space-y-4">
@@ -537,12 +523,7 @@ export function EnhancedCoordinateInput({ onAnalysisStart }: CoordinateInputProp
                 </div>
               </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="district">
-            <OfflineDistrictLookup />
-          </TabsContent>
-        </Tabs>
+        </div>
       </CardContent>
     </Card>
   );
