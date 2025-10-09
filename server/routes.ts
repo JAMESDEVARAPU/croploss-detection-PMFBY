@@ -544,6 +544,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }
 
+  // District lookup for offline mode
+  app.get("/api/district-lookup", async (req, res) => {
+    try {
+      const { district, mandal } = req.query;
+      
+      if (!district || !mandal) {
+        return res.status(400).json({ error: "District and mandal are required" });
+      }
+
+      // Database of district and mandal coordinates for Andhra Pradesh and Telangana
+      const locationDatabase: Record<string, Record<string, { latitude: number; longitude: number; }>> = {
+        // Andhra Pradesh districts
+        'krishna': {
+          'gudivada': { latitude: 16.4350, longitude: 80.9956 },
+          'machilipatnam': { latitude: 16.1875, longitude: 81.1389 },
+          'vijayawada': { latitude: 16.5062, longitude: 80.6480 },
+          'nuzvid': { latitude: 16.7889, longitude: 80.8464 }
+        },
+        'guntur': {
+          'guntur': { latitude: 16.3067, longitude: 80.4365 },
+          'tenali': { latitude: 16.2428, longitude: 80.6433 },
+          'narasaraopet': { latitude: 16.2348, longitude: 80.0490 }
+        },
+        'east godavari': {
+          'kakinada': { latitude: 16.9891, longitude: 82.2475 },
+          'rajahmundry': { latitude: 17.0005, longitude: 81.8040 },
+          'amalapuram': { latitude: 16.5790, longitude: 82.0070 }
+        },
+        'west godavari': {
+          'eluru': { latitude: 16.7107, longitude: 81.0950 },
+          'bhimavaram': { latitude: 16.5449, longitude: 81.5212 },
+          'tanuku': { latitude: 16.7549, longitude: 81.6800 }
+        },
+        // Telangana districts
+        'warangal': {
+          'warangal': { latitude: 17.9689, longitude: 79.5941 },
+          'hanamkonda': { latitude: 18.0145, longitude: 79.5718 }
+        },
+        'khammam': {
+          'khammam': { latitude: 17.2473, longitude: 80.1514 },
+          'kothagudem': { latitude: 17.5504, longitude: 80.6189 }
+        }
+      };
+
+      // Normalize input
+      const districtLower = String(district).toLowerCase().trim();
+      const mandalLower = String(mandal).toLowerCase().trim();
+
+      // Find coordinates
+      const districtData = locationDatabase[districtLower];
+      if (districtData && districtData[mandalLower]) {
+        res.json(districtData[mandalLower]);
+      } else {
+        // Return approximate center coordinates for the district if mandal not found
+        const approximateCoords: Record<string, { latitude: number; longitude: number; }> = {
+          'krishna': { latitude: 16.5062, longitude: 80.6480 },
+          'guntur': { latitude: 16.3067, longitude: 80.4365 },
+          'east godavari': { latitude: 16.9891, longitude: 82.2475 },
+          'west godavari': { latitude: 16.7107, longitude: 81.0950 },
+          'warangal': { latitude: 17.9689, longitude: 79.5941 },
+          'khammam': { latitude: 17.2473, longitude: 80.1514 }
+        };
+        
+        if (approximateCoords[districtLower]) {
+          res.json(approximateCoords[districtLower]);
+        } else {
+          // Default to Andhra Pradesh center if district not found
+          res.json({ latitude: 16.5062, longitude: 80.6480 });
+        }
+      }
+    } catch (error) {
+      console.error('District lookup error:', error);
+      res.status(500).json({ error: "Failed to lookup district coordinates" });
+    }
+  });
+
   // XAI Explanation Routes
   app.post("/api/xai-analysis", async (req, res) => {
     try {

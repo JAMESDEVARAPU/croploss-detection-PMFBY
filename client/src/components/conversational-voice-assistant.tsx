@@ -18,6 +18,8 @@ interface ConversationalVoiceAssistantProps {
     latitude: number;
     longitude: number;
     fieldArea: number;
+    district?: string;
+    mandal?: string;
   }) => void;
 }
 
@@ -54,6 +56,20 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
                 selectedLanguage === 'hi' ? "क्या मैं आपके खेत का विश्लेषण करने के लिए GPS लोकेशन एक्सेस कर सकता हूं?" : 
                 "మీ పొలాన్ని విశ్లేషించడానికి GPS లొకేషన్ యాక్సెస్ చేయవచ్చా?",
       action: "get_location_permission",
+      nextStep: "ask_field_area"
+    },
+    ask_district: {
+      question: selectedLanguage === 'en' ? "What is your district name?" : 
+                selectedLanguage === 'hi' ? "आपके जिले का नाम क्या है?" : 
+                "మీ జిల్లా పేరు ఏమిటి?",
+      action: "get_district",
+      nextStep: "ask_mandal"
+    },
+    ask_mandal: {
+      question: selectedLanguage === 'en' ? "What is your mandal or tehsil name?" : 
+                selectedLanguage === 'hi' ? "आपके मंडल या तहसील का नाम क्या है?" : 
+                "మీ మండలం పేరు ఏమిటి?",
+      action: "get_mandal",
       nextStep: "ask_field_area"
     },
     ask_field_area: {
@@ -189,47 +205,51 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
         const utterance = new SpeechSynthesisUtterance(text);
         const speakLang = lang || (selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US');
         utterance.lang = speakLang;
-        utterance.rate = 0.9;
+        utterance.rate = 0.85;  // Slightly slower for better clarity
         utterance.pitch = 1.0;
         utterance.volume = 1.0;
         
         const voices = window.speechSynthesis.getVoices();
-        console.log(`Available voices for ${speakLang}:`, voices.filter(v => v.lang.startsWith(speakLang.split('-')[0])));
+        console.log(`Requesting ${speakLang} voice. All available voices:`, voices.map(v => `${v.name} (${v.lang})`));
         
         let selectedVoice = null;
         
         if (speakLang.startsWith('hi')) {
+          // Try to find Hindi voice
           selectedVoice = voices.find(voice => 
             voice.lang === 'hi-IN' || 
             voice.lang.startsWith('hi')
           );
+          console.log('Hindi voice:', selectedVoice?.name || 'Not found');
         } else if (speakLang.startsWith('te')) {
-          // Try to find Telugu voice, fallback to English if not available
+          // Try to find Telugu voice, fallback if not available
           selectedVoice = voices.find(voice => 
             voice.lang === 'te-IN' || 
             voice.lang.startsWith('te')
           );
           
-          // If no Telugu voice found, log warning and use English as fallback
-          if (!selectedVoice) {
-            console.warn('No Telugu voice found, using default voice. Telugu text will still be displayed.');
-            selectedVoice = voices.find(voice => 
-              voice.lang === 'en-US' || 
-              voice.lang === 'en-GB' || 
-              voice.lang.startsWith('en')
-            );
+          if (selectedVoice) {
+            console.log('Telugu voice found:', selectedVoice.name);
+          } else {
+            console.warn('⚠️ No Telugu voice available on this device. Text will display in Telugu but speech will use English pronunciation.');
+            // For devices without Telugu voice, still set lang to te-IN
+            // This allows the browser to use its best approximation
           }
         } else {
+          // English
           selectedVoice = voices.find(voice => 
             voice.lang === 'en-US' || 
             voice.lang === 'en-GB' || 
             voice.lang.startsWith('en')
           );
+          console.log('English voice:', selectedVoice?.name || 'Using default');
         }
         
         if (selectedVoice) {
           utterance.voice = selectedVoice;
-          console.log('Selected voice:', selectedVoice.name, selectedVoice.lang);
+          console.log('✓ Using voice:', selectedVoice.name, selectedVoice.lang);
+        } else {
+          console.log('Using browser default voice for', speakLang);
         }
         
         utterance.onstart = () => {
@@ -483,15 +503,110 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
             }
           }
         } else {
-          const declineMessage = selectedLanguage === 'en'
-            ? "Okay, please manually enter your location then."
+          const offlineMessage = selectedLanguage === 'en'
+            ? "No problem! I'll ask for your district and mandal instead."
             : selectedLanguage === 'hi'
-            ? "ठीक है, कृपया अपना स्थान मैन्युअल रूप से दर्ज करें।"
-            : "సరే, దయచేసి మీ లొకేషన్ మాన్యువల్‌గా నమోదు చేయండి.";
+            ? "कोई बात नहीं! मैं आपका जिला और मंडल पूछूंगा।"
+            : "సమస్య లేదు! నేను మీ జిల్లా మరియు మండలం అడుగుతాను.";
           
-          speak(declineMessage);
-          stopConversation();
+          speak(offlineMessage, undefined, () => {
+            setCurrentStep('ask_district');
+            speak(getConversationFlow()['ask_district'].question);
+          });
         }
+        break;
+        
+      case "get_district":
+        setConversationData({ ...conversationData, district: response });
+        
+        const districtConfirmation = selectedLanguage === 'en' 
+          ? `Got it! District is ${response}.`
+          : selectedLanguage === 'hi'
+          ? `समझ गया! जिला है ${response}.`
+          : `అర్థమైంది! జిల్లా ${response}.`;
+        
+        speak(districtConfirmation, undefined, () => {
+          if (step.nextStep) {
+            setCurrentStep(step.nextStep);
+            speak(getConversationFlow()[step.nextStep].question);
+          }
+        });
+        break;
+        
+      case "get_mandal":
+        setConversationData({ ...conversationData, mandal: response });
+        
+        // Fetch coordinates based on district and mandal
+        const mandalConfirmation = selectedLanguage === 'en' 
+          ? `Thank you! Mandal is ${response}. Let me find the location coordinates.`
+          : selectedLanguage === 'hi'
+          ? `धन्यवाद! मंडल है ${response}. मुझे स्थान निर्देशांक खोजने दें।`
+          : `ధన్యవాదాలు! మండలం ${response}. లొకేషన్ కోఆర్డినేట్స్ కనుగొంటాను.`;
+        
+        speak(mandalConfirmation, undefined, async () => {
+          try {
+            // Fetch coordinates for district and mandal
+            const response_data = await fetch(`/api/district-lookup?district=${encodeURIComponent(conversationData.district)}&mandal=${encodeURIComponent(response)}`);
+            const locationData = await response_data.json();
+            
+            if (locationData.latitude && locationData.longitude) {
+              setConversationData({ 
+                ...conversationData, 
+                mandal: response,
+                latitude: locationData.latitude, 
+                longitude: locationData.longitude 
+              });
+              
+              const coordsMessage = selectedLanguage === 'en' 
+                ? `Found coordinates for ${conversationData.district}, ${response}.`
+                : selectedLanguage === 'hi'
+                ? `${conversationData.district}, ${response} के निर्देशांक मिल गए।`
+                : `${conversationData.district}, ${response} కోసం కోఆర్డినేట్స్ దొరికాయి.`;
+              
+              speak(coordsMessage, undefined, () => {
+                if (step.nextStep) {
+                  setCurrentStep(step.nextStep);
+                  speak(getConversationFlow()[step.nextStep].question);
+                }
+              });
+            } else {
+              const errorMessage = selectedLanguage === 'en' 
+                ? "Sorry, I couldn't find coordinates for that location. Using default coordinates."
+                : selectedLanguage === 'hi'
+                ? "क्षमा करें, मुझे उस स्थान के लिए निर्देशांक नहीं मिले। डिफ़ॉल्ट निर्देशांक उपयोग कर रहा हूं।"
+                : "క్షమించండి, ఆ లొకేషన్ కోసం కోఆర్డినేట్స్ దొరకలేదు. డిఫాల్ట్ కోఆర్డినేట్స్ వాడుతున్నాను.";
+              
+              // Use approximate coordinates for Andhra Pradesh as fallback
+              setConversationData({ 
+                ...conversationData, 
+                mandal: response,
+                latitude: 16.5062, 
+                longitude: 80.6480 
+              });
+              
+              speak(errorMessage, undefined, () => {
+                if (step.nextStep) {
+                  setCurrentStep(step.nextStep);
+                  speak(getConversationFlow()[step.nextStep].question);
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error fetching coordinates:', error);
+            // Use default coordinates
+            setConversationData({ 
+              ...conversationData, 
+              mandal: response,
+              latitude: 16.5062, 
+              longitude: 80.6480 
+            });
+            
+            if (step.nextStep) {
+              setCurrentStep(step.nextStep);
+              speak(getConversationFlow()[step.nextStep].question);
+            }
+          }
+        });
         break;
         
       case "get_field_area":
@@ -502,11 +617,16 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
           
           if (step.nextStep) {
             setCurrentStep(step.nextStep);
+            const completeData = {
+              ...conversationData,
+              fieldArea,
+              userName: conversationData.userName,
+              latitude: conversationData.latitude,
+              longitude: conversationData.longitude
+            };
+            console.log('✓ Analysis data ready, calling onAnalysisComplete with:', completeData);
             speak(getConversationFlow()[step.nextStep].question, undefined, () => {
-              onAnalysisComplete({
-                ...conversationData,
-                fieldArea
-              });
+              onAnalysisComplete(completeData);
               stopConversation();
             });
           }
