@@ -77,9 +77,9 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 3;
     recognition.lang = selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US';
     
     recognition.onstart = () => {
@@ -109,16 +109,52 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     recognition.onerror = (event: any) => {
       console.log('Recognition error:', event.error);
       setIsListening(false);
+      
+      // Auto-retry on network errors
+      if (event.error === 'network' || event.error === 'no-speech') {
+        setTimeout(() => {
+          if (recognitionRef.current && isActive && !isSpeaking) {
+            try {
+              console.log('Retrying recognition after error...');
+              recognitionRef.current.start();
+            } catch (e) {
+              console.log('Retry failed:', e);
+            }
+          }
+        }, 500);
+      }
     };
     
     recognition.onresult = (event: any) => {
-      const result = event.results[0];
-      const transcript = result[0].transcript;
-      console.log('Recognized:', transcript);
-      setTranscript(transcript);
+      let interimTranscript = '';
+      let finalTranscript = '';
       
-      if (result.isFinal) {
-        handleUserResponse(transcript);
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      
+      if (interimTranscript) {
+        console.log('Interim:', interimTranscript);
+        setTranscript(interimTranscript);
+      }
+      
+      if (finalTranscript) {
+        console.log('Recognized:', finalTranscript);
+        setTranscript('');
+        // Stop recognition after getting a final result
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.stop();
+          } catch (e) {
+            console.log('Stop error:', e);
+          }
+        }
+        handleUserResponse(finalTranscript.trim());
       }
     };
     
@@ -492,11 +528,12 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
             
             {transcript && (
               <div className="flex justify-end">
-                <div className="max-w-[80%] rounded-lg p-2 bg-gray-100 text-gray-700">
-                  <div className="text-xs italic">
-                    {selectedLanguage === 'en' ? 'Listening...' : selectedLanguage === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
+                <div className="max-w-[80%] rounded-lg p-2 bg-yellow-50 text-yellow-900 border-2 border-yellow-300">
+                  <div className="text-xs font-semibold mb-1 flex items-center">
+                    <Mic className="h-3 w-3 mr-1 animate-pulse" />
+                    {selectedLanguage === 'en' ? 'Hearing you...' : selectedLanguage === 'hi' ? 'सुन रहा हूँ...' : 'వింటున్నాను...'}
                   </div>
-                  <div className="text-sm">{transcript}</div>
+                  <div className="text-sm font-medium">{transcript}</div>
                 </div>
               </div>
             )}
