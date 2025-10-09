@@ -193,10 +193,10 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
         
         // Wait a bit longer before starting to listen again
         if (callback) {
-          setTimeout(callback, 1000);
-        } else if (isActive && recognitionRef.current) {
+          setTimeout(callback, 500);
+        } else {
           setTimeout(() => {
-            if (recognitionRef.current && isActive && !isSpeaking) {
+            if (recognitionRef.current && isActive) {
               try {
                 console.log('Starting recognition after speech');
                 recognitionRef.current.start();
@@ -204,7 +204,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
                 console.log('Recognition start error:', e);
               }
             }
-          }, 1200);
+          }, 800);
         }
       };
       
@@ -287,13 +287,22 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
           ? "बढ़िया! मैं हिंदी में जारी रखूंगा।"
           : "బాగుంది! నేను తెలుగులో కొనసాగిస్తాను.";
         
-        speak(confirmMessage, undefined, () => {
+        const langCode = detectedLang === 'hi' ? 'hi-IN' : detectedLang === 'te' ? 'te-IN' : 'en-US';
+        
+        speak(confirmMessage, langCode, () => {
           if (step.nextStep) {
             const nextStepKey = step.nextStep;
+            // Get the next question with the correct language
+            const nextQuestion = nextStepKey === 'get_name' 
+              ? (detectedLang === 'en' ? "Hello! What is your name?" : 
+                 detectedLang === 'hi' ? "नमस्ते! आपका नाम क्या है?" : 
+                 "హలో! మీ పేరు ఏమిటి?")
+              : '';
+            
             // Add delay to allow recognition to reinitialize with new language
             setTimeout(() => {
               setCurrentStep(nextStepKey);
-              speak(getConversationFlow()[nextStepKey].question);
+              speak(nextQuestion, langCode);
             }, 500);
           }
         });
