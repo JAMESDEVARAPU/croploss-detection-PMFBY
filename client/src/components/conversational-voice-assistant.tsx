@@ -93,7 +93,7 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     
-    recognition.continuous = true;
+    recognition.continuous = false;  // Changed to false to prevent continuous pickup
     recognition.interimResults = true;
     recognition.maxAlternatives = 3;
     recognition.lang = selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US';
@@ -107,19 +107,8 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
       console.log('Recognition ended');
       setIsListening(false);
       
-      // Auto-restart recognition if conversation is still active and not speaking
-      if (isActive && !isSpeaking) {
-        setTimeout(() => {
-          if (recognitionRef.current && isActive && !isSpeaking) {
-            try {
-              console.log('Auto-restarting recognition...');
-              recognitionRef.current.start();
-            } catch (e) {
-              console.log('Auto-restart failed:', e);
-            }
-          }
-        }, 100);
-      }
+      // DO NOT auto-restart - wait for system to finish speaking
+      // Recognition will restart after system speech completes
     };
     
     recognition.onerror = (event: any) => {

@@ -21,13 +21,14 @@ export default function VoiceAnalysis({ user }: VoiceAnalysisProps) {
 
   const analysisMutation = useMutation({
     mutationFn: async (data: any) => {
+      console.log('Sending analysis request:', data);
       const response = await apiRequest('POST', '/api/crop-analysis', {
-        name: data.userName,
-        mobileNumber: user.mobileNumber,
+        mobile: user.mobileNumber,
         latitude: data.latitude,
         longitude: data.longitude,
         fieldArea: data.fieldArea,
         cropType: 'rice',
+        language: 'hi',
       });
       return await response.json();
     },
