@@ -185,73 +185,124 @@ export function ConversationalVoiceAssistant({ user, onAnalysisComplete }: Conve
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       
-      const utterance = new SpeechSynthesisUtterance(text);
-      const speakLang = lang || (selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US');
-      utterance.lang = speakLang;
-      utterance.rate = 0.9;
-      utterance.pitch = 1.0;
-      utterance.volume = 1.0;
-      
-      const voices = window.speechSynthesis.getVoices();
-      let selectedVoice = null;
-      
-      if (speakLang.startsWith('hi')) {
-        selectedVoice = voices.find(voice => 
-          voice.lang === 'hi-IN' || 
-          voice.lang.startsWith('hi')
-        );
-      } else if (speakLang.startsWith('te')) {
-        selectedVoice = voices.find(voice => 
-          voice.lang === 'te-IN' || 
-          voice.lang.startsWith('te')
-        );
-      } else {
-        selectedVoice = voices.find(voice => 
-          voice.lang === 'en-US' || 
-          voice.lang === 'en-GB' || 
-          voice.lang.startsWith('en')
-        );
-      }
-      
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      }
-      
-      utterance.onstart = () => {
-        console.log('Speaking:', text);
-        setIsSpeaking(true);
-        addToConversationLog('System', text);
-      };
-      
-      utterance.onend = () => {
-        console.log('Finished speaking');
-        setIsSpeaking(false);
+      const speakText = () => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        const speakLang = lang || (selectedLanguage === 'hi' ? 'hi-IN' : selectedLanguage === 'te' ? 'te-IN' : 'en-US');
+        utterance.lang = speakLang;
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
         
-        // Wait a bit longer before starting to listen again
-        if (callback) {
-          setTimeout(callback, 500);
+        const voices = window.speechSynthesis.getVoices();
+        console.log(`Available voices for ${speakLang}:`, voices.filter(v => v.lang.startsWith(speakLang.split('-')[0])));
+        
+        let selectedVoice = null;
+        
+        if (speakLang.startsWith('hi')) {
+          selectedVoice = voices.find(voice => 
+            voice.lang === 'hi-IN' || 
+            voice.lang.startsWith('hi')
+          );
+        } else if (speakLang.startsWith('te')) {
+          // Try to find Telugu voice, fallback to English if not available
+          selectedVoice = voices.find(voice => 
+            voice.lang === 'te-IN' || 
+            voice.lang.startsWith('te')
+          );
+          
+          // If no Telugu voice found, log warning and use English as fallback
+          if (!selectedVoice) {
+            console.warn('No Telugu voice found, using default voice. Telugu text will still be displayed.');
+            selectedVoice = voices.find(voice => 
+              voice.lang === 'en-US' || 
+              voice.lang === 'en-GB' || 
+              voice.lang.startsWith('en')
+            );
+          }
         } else {
-          setTimeout(() => {
-            if (recognitionRef.current && isActive) {
-              try {
-                console.log('Starting recognition after speech');
-                recognitionRef.current.start();
-              } catch (e) {
-                console.log('Recognition start error:', e);
+          selectedVoice = voices.find(voice => 
+            voice.lang === 'en-US' || 
+            voice.lang === 'en-GB' || 
+            voice.lang.startsWith('en')
+          );
+        }
+        
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+          console.log('Selected voice:', selectedVoice.name, selectedVoice.lang);
+        }
+        
+        utterance.onstart = () => {
+          console.log('Speaking:', text, 'with lang:', speakLang);
+          setIsSpeaking(true);
+          addToConversationLog('System', text);
+        };
+        
+        utterance.onend = () => {
+          console.log('Finished speaking');
+          setIsSpeaking(false);
+          
+          // Wait a bit longer before starting to listen again
+          if (callback) {
+            setTimeout(callback, 500);
+          } else {
+            setTimeout(() => {
+              if (recognitionRef.current && isActive) {
+                try {
+                  console.log('Starting recognition after speech');
+                  recognitionRef.current.start();
+                } catch (e) {
+                  console.log('Recognition start error:', e);
+                }
               }
-            }
-          }, 800);
+            }, 800);
+          }
+        };
+        
+        utterance.onerror = (event) => {
+          console.error('Speech synthesis error:', event);
+          setIsSpeaking(false);
+          // Proceed with callback even on error
+          if (callback) {
+            setTimeout(callback, 500);
+          } else {
+            setTimeout(() => {
+              if (recognitionRef.current && isActive) {
+                try {
+                  recognitionRef.current.start();
+                } catch (e) {
+                  console.log('Recognition start error:', e);
+                }
+              }
+            }, 800);
+          }
+        };
+        
+        synthRef.current = utterance;
+        
+        try {
+          window.speechSynthesis.speak(utterance);
+        } catch (e) {
+          console.error('Error speaking:', e);
+          setIsSpeaking(false);
+          if (callback) {
+            setTimeout(callback, 500);
+          }
         }
       };
       
-      synthRef.current = utterance;
-      
+      const voices = window.speechSynthesis.getVoices();
       if (voices.length === 0) {
-        window.speechSynthesis.addEventListener('voiceschanged', () => {
-          window.speechSynthesis.speak(utterance);
-        }, { once: true });
+        // Wait for voices to load
+        window.speechSynthesis.addEventListener('voiceschanged', speakText, { once: true });
+        // Timeout fallback in case voices never load
+        setTimeout(() => {
+          if (!isSpeaking) {
+            speakText();
+          }
+        }, 1000);
       } else {
-        window.speechSynthesis.speak(utterance);
+        speakText();
       }
     } else if (callback) {
       addToConversationLog('System', text);

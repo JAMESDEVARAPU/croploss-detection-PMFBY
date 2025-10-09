@@ -1,15 +1,59 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mic, Radio } from "lucide-react";
 import { ConversationalVoiceAssistant } from "@/components/conversational-voice-assistant";
+import { AnalysisResults } from "@/components/analysis-results";
+import { XAIExplanationEnhanced } from "@/components/xai-explanation-enhanced";
 import backgroundImage from "@assets/seva_1759926468291.jpg";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import type { CropAnalysis } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 
 interface VoiceAnalysisProps {
   user: any;
 }
 
 export default function VoiceAnalysis({ user }: VoiceAnalysisProps) {
+  const [analysisResult, setAnalysisResult] = useState<CropAnalysis | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const { toast } = useToast();
+
+  const analysisMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await apiRequest('POST', '/api/crop-analysis', {
+        name: data.userName,
+        mobileNumber: user.mobileNumber,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        fieldArea: data.fieldArea,
+        cropType: 'rice',
+      });
+      return await response.json();
+    },
+    onSuccess: (data: CropAnalysis) => {
+      setAnalysisResult(data);
+      setIsAnalyzing(false);
+      toast({
+        title: "Analysis Complete",
+        description: "Your crop loss analysis is ready!",
+      });
+    },
+    onError: (error) => {
+      console.error('Analysis failed:', error);
+      setIsAnalyzing(false);
+      toast({
+        title: "Analysis Failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleVoiceAnalysisComplete = async (data: any) => {
     console.log('Voice analysis completed:', data);
+    setIsAnalyzing(true);
+    analysisMutation.mutate(data);
   };
 
   return (
@@ -29,7 +73,7 @@ export default function VoiceAnalysis({ user }: VoiceAnalysisProps) {
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -42,8 +86,22 @@ export default function VoiceAnalysis({ user }: VoiceAnalysisProps) {
                 user={user}
                 onAnalysisComplete={handleVoiceAnalysisComplete}
               />
+              
+              {isAnalyzing && (
+                <div className="mt-8 text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+                  <p className="mt-4 text-gray-600">Analyzing your field with satellite data...</p>
+                </div>
+              )}
             </CardContent>
           </Card>
+
+          {analysisResult && (
+            <>
+              <AnalysisResults analysis={analysisResult} />
+              <XAIExplanationEnhanced analysis={analysisResult} />
+            </>
+          )}
         </main>
       </div>
     </div>
